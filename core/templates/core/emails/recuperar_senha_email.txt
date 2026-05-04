@@ -1,0 +1,15 @@
+Recuperação de senha - BIBTEC
+
+Olá {{ user.get_full_name|default:user.username }}!
+
+Você solicitou a recuperação da sua senha no sistema BIBTEC.
+
+Clique no link abaixo para redefinir sua senha:
+
+{{ protocol }}://{{ domain }}{% url 'core:redefinir_senha' uidb64=uid token=token %}
+
+Se você não solicitou esta recuperação, ignore este e-mail.
+
+---
+BIBTEC - Sistema de Recomendação de Livros Acadêmicos
+UFRA - Campus Capitão Poço

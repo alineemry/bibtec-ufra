@@ -1,0 +1,333 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Gerenciar Usuários - BIBTEC{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-admin {
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 30px 20px;
+        border-radius: 6px;
+    }
+
+    .topo-admin {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .topo-admin h2 {
+        margin: 0;
+        font-size: 26px;
+        color: #2d4c2e;
+        font-family: Georgia, serif;
+    }
+
+    .subtexto {
+        margin: 0 0 20px;
+        color: #2a4a2b;
+        line-height: 1.5;
+    }
+
+    .busca-admin {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+
+    .busca-admin input {
+        flex: 1;
+        min-width: 260px;
+        padding: 10px 12px;
+        border-radius: 20px;
+        border: 1px solid #6f8f73;
+        background: white;
+        font-size: 14px;
+    }
+
+    .btn-busca {
+        background-color: #1f5a16;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 18px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .btn-busca:hover {
+        background-color: #174410;
+    }
+
+    .btn-limpar {
+        background-color: #dbe9dc;
+        color: #1E4D12;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 18px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .btn-limpar:hover {
+        background-color: #cfe0d1;
+    }
+
+    .resultado-busca {
+        margin-bottom: 16px;
+        color: #2a4a2b;
+        font-size: 14px;
+    }
+
+    .tabela {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .tabela th {
+        background-color: #1f5a16;
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .tabela td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        font-size: 14px;
+        color: #2a4a2b;
+        vertical-align: middle;
+    }
+
+    .tabela tr:hover {
+        background-color: #f1f7f2;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 14px;
+        font-size: 12px;
+        font-weight: bold;
+    }
+
+    .badge-admin {
+        background-color: #1f5a16;
+        color: white;
+    }
+
+    .badge-usuario {
+        background-color: #dbe9dc;
+        color: #1f3f20;
+    }
+
+    .acoes {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .acoes-finais {
+        display: flex;
+        justify-content: flex-end;
+        margin: 20px 0 0;
+        
+    }
+
+    .btn-acao {
+        border: none;
+        border-radius: 14px;
+        padding: 6px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        color: white;
+        background-color: #1f5a16;
+    }
+
+    .btn-promover {
+        background-color: #2e7d32;
+    }
+
+    .btn-promover:hover {
+        background-color: #256628;
+    }
+
+    .btn-rebaixar {
+        background-color: #ef6c00;
+    }
+
+    .btn-rebaixar:hover {
+        background-color: #d45d00;
+    }
+
+    .btn-excluir {
+        background-color: #c62828;
+    }
+
+    .btn-excluir:hover {
+        background-color: #a61f1f;
+    }
+
+    .vazio {
+        margin-top: 20px;
+        text-align: center;
+        color: #2a4a2b;
+    }
+
+    .breadcrumb {
+        margin-bottom: 20px;
+        padding: 8px 0;
+        font-size: 14px;
+        color: #2a4a2b;
+    }
+
+    .breadcrumb a {
+        color: #1f5a16;
+        text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumb span {
+        font-weight: bold;
+        color: #1f3f20;
+    }
+</style>
+
+<div class="secao-admin">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="{% url 'core:recomendacoes' %}">Home</a> / 
+        <span>Gerenciar Usuários</span>
+    </div>
+
+    <div class="topo-admin">
+        <h2>Gerenciar Usuários</h2>
+    </div>
+
+    <p class="subtexto">
+        Nesta área, o administrador pode visualizar usuários cadastrados, localizar contas específicas e gerenciar permissões de acesso administrativo.
+    </p>
+
+    <form method="get" class="busca-admin">
+        <input
+            type="text"
+            name="q"
+            value="{{ termo }}"
+            placeholder="Buscar por nome de usuário ou e-mail"
+        >
+        <button type="submit" class="btn-busca">Buscar</button>
+
+        {% if termo %}
+            <a href="{% url 'core:admin_usuarios_lista' %}">
+                <button type="button" class="btn-limpar">Limpar</button>
+            </a>
+        {% endif %}
+    </form>
+
+    {% if termo %}
+        <div class="resultado-busca">
+            Resultados para: <strong>{{ termo }}</strong>
+        </div>
+    {% endif %}
+
+    {% if page_obj %}
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>Nome de usuário</th>
+                    <th>E-mail</th>
+                    <th>Tipo de acesso</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for usuario in page_obj %}
+                    <tr>
+                        <td>{{ usuario.username }}</td>
+                        <td>{{ usuario.email|default:"Não informado" }}</td>
+                        <td>
+                            {% if usuario.is_staff %}
+                                <span class="badge badge-admin">Administrador</span>
+                            {% else %}
+                                <span class="badge badge-usuario">Usuário</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="acoes">
+                                {% if not usuario.is_staff %}
+                                    <form method="post" action="{% url 'core:admin_usuario_promover' usuario.id %}" 
+                                          onsubmit="return confirmarPermissao('Tem certeza que deseja promover o usuário {{ usuario.username }} a administrador?');" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-acao btn-promover">Promover</button>
+                                    </form>
+                                {% endif %}
+
+                                {% if usuario.is_staff and not usuario.is_superuser %}
+                                    <form method="post" action="{% url 'core:admin_usuario_rebaixar' usuario.id %}"
+                                          onsubmit="return confirmarPermissao('Tem certeza que deseja rebaixar o usuário {{ usuario.username }}? Ele perderá os privilégios de administrador.');" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-acao btn-rebaixar">Rebaixar</button>
+                                    </form>
+                                {% endif %}
+
+                                {% if not usuario.is_superuser %}
+                                    <form method="post" action="{% url 'core:admin_usuario_excluir' usuario.id %}"
+                                          onsubmit="return confirmarExclusao('Tem certeza que deseja excluir o usuário {{ usuario.username }}? Esta ação não pode ser desfeita.');" style="display: inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-acao btn-excluir">Excluir</button>
+                                    </form>
+                                    
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="paginacao">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if termo %}&q={{ termo }}{% endif %}">Anterior</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="atual">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}{% if termo %}&q={{ termo }}{% endif %}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if termo %}&q={{ termo }}{% endif %}">Próxima</a>
+            {% endif %}
+        </div>    
+    {% else %}
+        <div class="vazio">Nenhum usuário encontrado.</div>
+    {% endif %}
+
+    <div class="acoes-finais">
+        <a href="{% url 'core:recomendacoes' %}">
+            <button class="btn-acao" type="button">Ir para a página inicial</button>
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

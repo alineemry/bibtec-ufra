@@ -1,0 +1,99 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Excluir Conta - BIBTEC{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-confirmacao {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 30px 20px;
+        border-radius: 6px;
+        text-align: center;
+    }
+
+    h2 {
+        color: #2d4c2e;
+        margin-bottom: 16px;
+    }
+
+    .mensagem {
+        color: #2a4a2b;
+        margin-bottom: 20px;
+        font-size: 15px;
+    }
+
+    .alerta {
+        background-color: #f8d7da;
+        color: #842029;
+        padding: 12px;
+        border-radius: 6px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .acoes {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 10px 18px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .btn-cancelar {
+        background-color: #dbe9dc;
+        color: #1E4D12;
+    }
+
+    .btn-confirmar {
+        background-color: #c62828;
+        color: white;
+    }
+
+    .btn-confirmar:hover {
+        background-color: #a61f1f;
+    }
+</style>
+
+<div class="secao-confirmacao">
+
+    <h2>Excluir minha conta</h2>
+
+    <div class="mensagem">
+        Tem certeza que deseja excluir sua conta?
+    </div>
+
+    <div class="alerta">
+        Esta ação não poderá ser desfeita!
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="acoes">
+            <a href="{% url 'core:meu_perfil' %}">
+                <button type="button" class="btn btn-cancelar">
+                    Cancelar
+                </button>
+            </a>
+
+            <button type="submit" class="btn btn-confirmar">
+                Confirmar exclusão
+            </button>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

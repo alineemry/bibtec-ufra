@@ -1,0 +1,419 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Minhas Áreas de Interesse - BIBTEC{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-areas {
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 40px 20px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+        max-width: 900px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .secao-areas h2 {
+        margin: 0 0 12px;
+        font-size: 26px;
+        color: #2d4c2e;
+        font-family: Georgia, serif;
+    }
+
+    .texto-apoio {
+        color: #2a4a2b;
+        margin-bottom: 22px;
+        line-height: 1.6;
+    }
+
+    .mensagem {
+        background-color: #dbe9dc;
+        color: #2a4a2b;
+        padding: 12px 14px;
+        border-radius: 8px;
+        margin-bottom: 18px;
+        font-size: 14px;
+    }
+
+    .mensagem-sucesso-fixa {
+        display: none;
+        background-color: #dbe9dc;
+        color: #1f5a16;
+        padding: 14px 16px;
+        border-radius: 8px;
+        margin-bottom: 18px;
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .search-area {
+        margin-bottom: 18px;
+    }
+
+    .search-input {
+        width: 100%;
+        max-width: 520px;
+        height: 44px;
+        padding: 10px 12px;
+        border: 1px solid #6f8f73;
+        border-radius: 12px;
+        background-color: #FFFFFF;
+        font-size: 14px;
+        font-family: Arial, sans-serif;
+        outline: none;
+    }
+
+    .search-input::placeholder {
+        color: #6c757d;
+    }
+
+    .selection-info {
+        color: #1E4D12;
+        font-size: 14px;
+        margin-bottom: 18px;
+        font-weight: bold;
+    }
+
+    .lista-areas {
+        border: 1px solid #6f8f73;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f7fbf7;
+    }
+
+    .lista-header {
+        background-color: #dbe9dc;
+        color: #1f3f20;
+        padding: 12px 16px;
+        font-weight: bold;
+        border-bottom: 1px solid #b7cbb9;
+    }
+
+    .areas-container {
+        max-height: 420px;
+        overflow-y: auto;
+    }
+
+    .area-item {
+        border-bottom: 1px solid #d6e3d7;
+    }
+
+    .area-item:last-child {
+        border-bottom: none;
+    }
+
+    .area-item label {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        color: #2a4a2b;
+    }
+
+    .area-item label:hover {
+        background-color: #edf5ee;
+    }
+
+    .area-item.selecionada label {
+        background-color: #dbe9dc;
+        font-weight: bold;
+    }
+
+    .area-item input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+        accent-color: #1B4314;
+        flex-shrink: 0;
+    }
+
+    .area-nome {
+        flex: 1;
+        line-height: 1.4;
+    }
+
+    .tag-selecionada {
+        display: none;
+        font-size: 12px;
+        background-color: #1B4314;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 12px;
+        flex-shrink: 0;
+    }
+
+    .area-item.selecionada .tag-selecionada {
+        display: inline-block;
+    }
+
+    .empty-message {
+        display: none;
+        padding: 16px;
+        color: #631A1A;
+        font-size: 14px;
+    }
+
+    .acoes {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    .btn-principal,
+    .btn-secundario {
+        min-width: 180px;
+        height: 44px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s ease;
+        border: none;
+    }
+
+    .btn-principal {
+        background-color: #1B4314;
+        color: #FFFFFF;
+    }
+
+    .btn-principal:hover {
+        background-color: #14350f;
+        transform: translateY(-1px);
+    }
+
+    .btn-secundario {
+        background-color: #dbe9dc;
+        color: #1E4D12;
+    }
+
+    .btn-secundario:hover {
+        background-color: #cfe0d1;
+        transform: translateY(-1px);
+    }
+
+    .link-btn {
+        text-decoration: none;
+    }
+
+    @media (max-width: 700px) {
+        .acoes {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .btn-principal,
+        .btn-secundario {
+            width: 100%;
+        }
+
+        .search-input {
+            max-width: 100%;
+        }
+
+        .area-item label {
+            align-items: flex-start;
+        }
+    }
+
+    .breadcrumb {
+        margin-bottom: 20px;
+        padding: 8px 0;
+        font-size: 14px;
+        color: #2a4a2b;
+    }
+
+    .breadcrumb a {
+        color: #1f5a16;
+        text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumb span {
+        font-weight: bold;
+        color: #1f3f20;
+    }
+</style>
+
+<div class="secao-areas">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="{% url 'core:recomendacoes' %}">Home</a> / 
+        <span>Minhas Áreas de Interesse</span>
+    </div>
+
+    <h2>Minhas Áreas de Interesse</h2>
+
+    <div class="texto-apoio">
+        Atualize suas áreas de interesse para manter suas recomendações mais alinhadas com seu perfil acadêmico e com os conteúdos que deseja explorar no acervo da biblioteca.
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="mensagem">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="mensagem-sucesso-fixa" id="mensagemSucesso">
+        Preferências salvas com sucesso. Redirecionando...
+    </div>
+
+    <form method="post" id="areasForm">
+        {% csrf_token %}
+
+        <div class="search-area">
+            <input
+                type="text"
+                id="searchAreas"
+                class="search-input"
+                placeholder="Buscar área de interesse..."
+            >
+        </div>
+
+        <div class="selection-info" id="selectionInfo">
+            Nenhuma área selecionada.
+        </div>
+
+        <div class="lista-areas">
+            <div class="lista-header">
+                Áreas disponíveis
+            </div>
+
+            <div class="areas-container" id="areasContainer">
+                {% for checkbox in form.areas %}
+                    <div class="area-item" data-name="{{ checkbox.choice_label|lower }}">
+                        <label for="{{ checkbox.id_for_label }}">
+                            {{ checkbox.tag }}
+                            <span class="area-nome">{{ checkbox.choice_label }}</span>
+                            <span class="tag-selecionada">Selecionada</span>
+                        </label>
+                    </div>
+                {% endfor %}
+
+                <div class="empty-message" id="emptyMessage">
+                    Nenhuma área encontrada para a busca informada.
+                </div>
+            </div>
+        </div>
+
+        <div class="acoes">
+            <button type="submit" class="btn-principal">Salvar preferências</button>
+
+            <a href="{% url 'core:recomendacoes' %}" class="link-btn">
+                <button type="button" class="btn-secundario">Voltar</button>
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('areasForm');
+    const searchInput = document.getElementById('searchAreas');
+    const selectionInfo = document.getElementById('selectionInfo');
+    const emptyMessage = document.getElementById('emptyMessage');
+    const mensagemSucesso = document.getElementById('mensagemSucesso');
+    const areasContainer = document.getElementById('areasContainer');
+
+    function normalizeText(text) {
+        return text
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+    }
+
+    function getAreaItems() {
+        return Array.from(document.querySelectorAll('.area-item'));
+    }
+
+    function updateSelectedState() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name="areas"]');
+        const selected = document.querySelectorAll('input[type="checkbox"][name="areas"]:checked').length;
+
+        if (selected === 0) {
+            selectionInfo.textContent = 'Nenhuma área selecionada.';
+        } else if (selected === 1) {
+            selectionInfo.textContent = '1 área selecionada.';
+        } else {
+            selectionInfo.textContent = `${selected} áreas selecionadas.`;
+        }
+
+        checkboxes.forEach((checkbox) => {
+            const areaItem = checkbox.closest('.area-item');
+            if (checkbox.checked) {
+                areaItem.classList.add('selecionada');
+            } else {
+                areaItem.classList.remove('selecionada');
+            }
+        });
+    }
+
+    function reorderItems() {
+        const items = getAreaItems();
+
+        items.sort((a, b) => {
+            const aChecked = a.querySelector('input[type="checkbox"]').checked;
+            const bChecked = b.querySelector('input[type="checkbox"]').checked;
+
+            if (aChecked === bChecked) {
+                const aName = normalizeText(a.dataset.name || '');
+                const bName = normalizeText(b.dataset.name || '');
+                return aName.localeCompare(bName);
+            }
+
+            return aChecked ? -1 : 1;
+        });
+
+        items.forEach(item => {
+            areasContainer.insertBefore(item, emptyMessage);
+        });
+    }
+
+    function applyFilter() {
+        const term = normalizeText(searchInput.value.trim());
+        let visibleCount = 0;
+
+        getAreaItems().forEach((item) => {
+            const name = normalizeText(item.dataset.name || '');
+            const matches = name.includes(term);
+
+            item.style.display = matches ? 'block' : 'none';
+
+            if (matches) {
+                visibleCount++;
+            }
+        });
+
+        emptyMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    document.querySelectorAll('input[type="checkbox"][name="areas"]').forEach((checkbox) => {
+        checkbox.addEventListener('change', () => {
+            updateSelectedState();
+            reorderItems();
+            applyFilter();
+        });
+    });
+
+    searchInput.addEventListener('input', applyFilter);
+
+    form.addEventListener('submit', function () {
+        mensagemSucesso.style.display = 'block';
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        updateSelectedState();
+        reorderItems();
+        applyFilter();
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Minhas Recomendações - BIBTEC{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-lista {
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 40px 20px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+    }
+
+    .secao-lista h2 {
+        margin: 0 0 12px;
+        font-size: 26px;
+        color: #2d4c2e;
+        font-family: Georgia, serif;
+    }
+
+    .texto-apoio {
+        color: #2a4a2b;
+        margin-bottom: 24px;
+        line-height: 1.5;
+    }
+
+    .livros-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+
+    .livro-card {
+        text-align: center;
+        background-color: #d4e8d4;
+        border-radius: 8px;
+        padding: 12px;
+    }
+
+    .livro-capa {
+        width: 100%;
+        height: 250px;
+        background-color: #1f5a09;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 18px;
+        letter-spacing: 4px;
+        line-height: 1.5;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .livro-capa img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .livro-titulo {
+        font-size: 14px;
+        color: #2a4a2b;
+        margin: 10px 0 6px;
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    .livro-autor {
+        font-size: 13px;
+        color: #466848;
+        margin-bottom: 12px;
+        min-height: 18px;
+    }
+
+    .recomendacao-motivo {
+        margin: 8px 10px;
+        padding: 5px 8px;
+        background-color: #e8f0e8;
+        border-radius: 20px;
+        font-size: 11px;
+        color: #1f5a16;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .btn-detalhes {
+        background-color: #1f5a16;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn-detalhes:hover {
+        background-color: #174410;
+    }
+
+    .paginacao {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .paginacao a,
+    .paginacao span {
+        padding: 8px 12px;
+        border-radius: 16px;
+        background-color: #dbe9dc;
+        color: #1f3f20;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .paginacao .atual {
+        background-color: #1B4314;
+        color: white;
+        font-weight: bold;
+    }
+
+    .acoes-finais {
+        display: flex;
+        justify-content: flex-end;
+        margin: 20px 0 0;
+    }
+
+    .btn-acao {
+        border: none;
+        border-radius: 14px;
+        padding: 10px 18px;
+        font-size: 13px;
+        cursor: pointer;
+        color: white;
+        background-color: #1f5a16;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn-acao:hover {
+        background-color: #174410;
+    }
+</style>
+
+<div class="secao-lista">
+    <h2>Livros Recomendados para Você</h2>
+
+    <div class="texto-apoio">
+        Esta lista apresenta recomendações personalizadas com base em suas interações, interesses e histórico no sistema.
+    </div>
+
+    {% if page_obj %}
+        <div class="livros-grid">
+            {% for livro in page_obj %}
+                <div class="livro-card">
+                    <a href="{% url 'core:detalhe_livro' livro.id %}">
+                        <div class="livro-capa">
+                            {% if livro.capa_url %}
+                                <img src="{{ livro.capa_url }}" alt="{{ livro.titulo }}">
+                            {% else %}
+                                <div>SEM<br>CAPA</div>
+                            {% endif %}
+                        </div>
+                    </a>
+
+                    <div class="livro-titulo">{{ livro.titulo|default:"Sem Nome" }}</div>
+                    <div class="livro-autor">{{ livro.autor|default:"Autor não informado" }}</div>
+
+                    {% if livro.explicacao %}
+                    <div class="recomendacao-motivo">
+                         {{ livro.explicacao|first }}
+                    </div>
+                    {% endif %}
+
+                    <a href="{% url 'core:detalhe_livro' livro.id %}">
+                        <button class="btn-detalhes" type="button">Ver Detalhes</button>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="paginacao">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="atual">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p style="color:#2a4a2b;">Nenhuma recomendação disponível no momento.</p>
+    {% endif %}
+
+    <div class="acoes-finais">
+        <a href="{% url 'core:recomendacoes' %}">
+            <button class="btn-acao" type="button">Ir para a página inicial</button>
+        </a>
+    </div>
+</div>
+
+{% endblock %}

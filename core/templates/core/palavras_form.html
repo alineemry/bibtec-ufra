@@ -1,0 +1,85 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Palavra-chave - BIBTEC{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-form {
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 40px 20px;
+        border-radius: 6px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        color: #2d4c2e;
+        font-family: Georgia, serif;
+    }
+
+    form p {
+        margin-bottom: 16px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #6f8f73;
+    }
+
+    .acoes {
+        margin-top: 24px;
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn {
+        padding: 10px 18px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .btn-salvar {
+        background: #1B4314;
+        color: white;
+    }
+
+    .btn-voltar {
+        background: #dbe9dc;
+        color: #1E4D12;
+    }
+</style>
+
+<div class="secao-form">
+
+    <h2>
+        {% if form.instance.pk %}
+            Editar Palavra-chave
+        {% else %}
+            Nova Palavra-chave
+        {% endif %}
+    </h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <div class="acoes">
+            <button type="submit" class="btn btn-salvar">Salvar</button>
+
+            <a href="{% url 'core:admin_palavras_lista' %}">
+                <button type="button" class="btn btn-voltar">Voltar</button>
+            </a>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

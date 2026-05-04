@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - BIBTEC</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #B8D8BE;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 620px;
+            background-color: #A3C9AD;
+            border: 1.5px solid #1E4D12;
+            border-radius: 14px;
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.18);
+            padding: 28px 24px;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .logo-area img {
+            width: 72px;
+            max-width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .logo-area h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 4px;
+            color: #1E4D12;
+        }
+
+        .titulo {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #1E4D12;
+            margin: 18px 0 22px;
+            text-transform: uppercase;
+            text-shadow: 0.5px 0.5px 0 #dcebdc;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #1E4D12;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        select {
+            width: 100%;
+            height: 44px;
+            padding: 10px 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #FFFFFF;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            outline: none;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 42px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 20px;
+            color: #1E4D12;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .erro-geral {
+            background-color: #f8d7da;
+            color: #631A1A;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .erro-campo {
+            color: #631A1A;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .btn-area {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .btn-primary {
+            width: 160px;
+            height: 44px;
+            border: none;
+            border-radius: 8px;
+            background-color: #1B4314;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #14350f;
+        }
+
+        .cadastro-area {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .cadastro-area p {
+            margin: 0;
+            color: #1E4D12;
+            font-size: 14px;
+        }
+
+        .cadastro-area a {
+            color: #1E4D12;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .cadastro-area a:hover {
+            text-decoration: underline;
+        }
+
+        .input-erro {
+            outline: 2px solid #631A1A;
+        }
+
+        .input-sucesso {
+            outline: 2px solid #1B4314;
+        }
+
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 22px 18px;
+            }
+
+            .logo-area h1 {
+                font-size: 22px;
+            }
+
+            .titulo {
+                font-size: 18px;
+            }
+
+            .btn-area {
+                justify-content: stretch;
+            }
+
+            .btn-primary {
+                width: 100%;
+            }
+        }
+
+        .termo-box {
+            background-color: #dbe9dc;
+            border: 1px solid #5f8265;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 18px 0;
+            max-height: 220px;
+            overflow-y: auto;
+            color: #2a4a2b;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .termo-box h3 {
+            margin-top: 0;
+            color: #1f3f20;
+        }
+
+        .consentimento-field {
+            margin: 16px 0 20px;
+            color: #1f3f20;
+            font-size: 14px;
+        }
+
+        .consentimento-field input[type="checkbox"] {
+            margin-right: 8px;
+            transform: scale(1.1);
+        }
+
+        .consentimento-field ul.errorlist {
+            color: #8b1e1e;
+            margin-top: 8px;
+            padding-left: 18px;
+        }
+
+        .texto-ajuda-senha {
+            font-size: 13px;
+            color: #466848;
+            margin-top: -8px;
+            margin-bottom: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <div class="logo-area">
+            <img src="/media/bibtec_logo.png"
+                 alt="Logo BIBTEC"
+                 style="max-width: 80px; width: 100%; height: auto;">
+            <h1>BIBTEC</h1>
+        </div>
+
+        <div class="titulo">Cadastro do Usuário</div>
+
+        <form method="post" id="cadastroForm" novalidate>
+            {% csrf_token %}
+
+            <!-- Exibir mensagens do Django messages -->
+            {% if messages %}
+                <div class="erro-geral">
+                    {% for message in messages %}
+                        <div>{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- Exibir erros do formulário de forma clara -->
+            {% if form.errors %}
+                <div class="erro-geral" style="background-color: #f8d7da; border: 1px solid #f5c6cb;">
+                    <strong>Por favor, corrija os seguintes erros:</strong>
+                    <ul style="margin-top: 10px; margin-bottom: 0;">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li><strong>{{ field|capfirst }}:</strong> {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <!-- Erros não campo -->
+            {% if form.non_field_errors %}
+                <div class="erro-geral">
+                    {% for error in form.non_field_errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="id_nome">Nome</label>
+                <input
+                    type="text"
+                    name="nome"
+                    id="id_nome"
+                    placeholder="Nome e Sobrenome"
+                    value="{{ form.nome.value|default:'' }}"
+                    required
+                >
+                {% if form.nome.errors %}
+                    <div class="erro-campo">
+                        {% for error in form.nome.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_username">Nome de usuário</label>
+                <input
+                    type="text"
+                    name="username"
+                    id="id_username"
+                    placeholder="username"
+                    value="{{ form.username.value|default:'' }}"
+                    required
+                >
+                {% if form.username.errors %}
+                    <div class="erro-campo">
+                        {% for error in form.username.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_email">Email</label>
+                <input
+                    type="email"
+                    name="email"
+                    id="id_email"
+                    placeholder="username@gmail.com"
+                    value="{{ form.email.value|default:'' }}"
+                    required
+                >
+                <div class="erro-campo" id="emailError"></div>
+                {% if form.email.errors %}
+                    <div class="erro-campo">
+                        {% for error in form.email.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.perfil_academico.id_for_label }}">Perfil Acadêmico</label>
+                {{ form.perfil_academico }}
+                {% if form.perfil_academico.errors %}
+                    <div class="erro-campo">
+                        {% for error in form.perfil_academico.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                <label for="id_password">Senha</label>
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        name="password"
+                        id="id_password"
+                        placeholder="Senha"
+                        required
+                    >
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        onclick="togglePassword('id_password', 'eyePath_1', 'eyeCircle_1')"
+                        aria-label="Mostrar ou ocultar senha"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path id="eyePath_1" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle id="eyeCircle_1" cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+                {% if form.password.errors %}
+                    <div class="erro-campo">
+                        {% for error in form.password.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <p class="texto-ajuda-senha">
+                A senha deve ter no mínimo 8 caracteres, incluindo letras e números.
+            </p>
+
+            <div class="form-group">
+                <label for="id_confirmar_senha">Confirmar Senha</label>
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        name="confirmar_senha"
+                        id="id_confirmar_senha"
+                        placeholder="Confirmar senha"
+                        required
+                    >
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        onclick="togglePassword('id_confirmar_senha', 'eyePath_2', 'eyeCircle_2')"
+                        aria-label="Mostrar ou ocultar senha"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path id="eyePath_2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle id="eyeCircle_2" cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+                <div class="erro-campo" id="passwordMatchError"></div>
+                {% if form.confirmar_senha.errors %}
+                    <div class="erro-campo">
+                        {% for error in form.confirmar_senha.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="termo-box">
+                <h3>Termo de Consentimento</h3>
+                <p>
+                    Ao realizar o cadastro no sistema BIBTEC, você concorda com a coleta e o uso dos seus dados
+                    pessoais e das suas interações com os livros para fins de personalização das recomendações acadêmicas.
+                </p>
+                <p>
+                    Os dados serão utilizados exclusivamente no contexto do sistema, com o objetivo de melhorar
+                    sua experiência de uso e apoiar a indicação de materiais compatíveis com seu perfil e interesses.
+                </p>
+                <p>
+                    Você poderá, a qualquer momento, solicitar a atualização ou exclusão de seus dados por meio das
+                    funcionalidades disponíveis no sistema.
+                </p>
+            </div>
+
+            <div class="consentimento-field">
+                {{ form.consentimento_recomendacao }}
+                <label for="{{ form.consentimento_recomendacao.id_for_label }}">
+                    Li e aceito o Termo de Consentimento para uso dos meus dados nas recomendações acadêmicas.
+                </label>
+                {% if form.consentimento_recomendacao.errors %}
+                    <div class="erro-campo">
+                        {% for error in form.consentimento_recomendacao.errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="btn-area">
+                <button type="submit" class="btn-primary" id="btnSubmit">
+                    <span id="btnText">Cadastrar</span>
+                </button>
+            </div>
+            
+        </form>
+
+        <div class="cadastro-area">
+            <p>
+                Já tem conta?
+                <a href="{% url 'login' %}">Clique aqui para fazer login</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword(inputId, pathId, circleId) {
+            const passwordInput = document.getElementById(inputId);
+            const eyePath = document.getElementById(pathId);
+            const eyeCircle = document.getElementById(circleId);
+
+            const openEye = "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z";
+            const closedEye = "M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22";
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyePath.setAttribute('d', closedEye);
+                eyeCircle.style.display = 'none';
+            } else {
+                passwordInput.type = 'password';
+                eyePath.setAttribute('d', openEye);
+                eyeCircle.style.display = 'block';
+            }
+        }
+
+        const emailInput = document.getElementById('id_email');
+        const passwordInput = document.getElementById('id_password');
+        const confirmPasswordInput = document.getElementById('id_confirmar_senha');
+
+        const emailError = document.getElementById('emailError');
+        const passwordMatchError = document.getElementById('passwordMatchError');
+
+        function validateEmail() {
+            const value = emailInput.value.trim();
+            const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (value === '') {
+                emailError.textContent = '';
+                emailInput.classList.remove('input-erro', 'input-sucesso');
+                return;
+            }
+
+            if (!pattern.test(value)) {
+                emailError.textContent = 'Digite um e-mail válido.';
+                emailInput.classList.add('input-erro');
+                emailInput.classList.remove('input-sucesso');
+            } else {
+                emailError.textContent = '';
+                emailInput.classList.remove('input-erro');
+                emailInput.classList.add('input-sucesso');
+            }
+        }
+
+        function validatePasswordMatch() {
+            const pass1 = passwordInput.value;
+            const pass2 = confirmPasswordInput.value;
+
+            if (pass2 === '') {
+                passwordMatchError.textContent = '';
+                confirmPasswordInput.classList.remove('input-erro', 'input-sucesso');
+                return;
+            }
+
+            if (pass1 !== pass2) {
+                passwordMatchError.textContent = 'As senhas não coincidem.';
+                confirmPasswordInput.classList.add('input-erro');
+                confirmPasswordInput.classList.remove('input-sucesso');
+            } else {
+                passwordMatchError.textContent = '';
+                confirmPasswordInput.classList.remove('input-erro');
+                confirmPasswordInput.classList.add('input-sucesso');
+            }
+        }
+
+        emailInput.addEventListener('input', validateEmail);
+        passwordInput.addEventListener('input', validatePasswordMatch);
+        confirmPasswordInput.addEventListener('input', validatePasswordMatch);
+
+        const form = document.querySelector('form');
+        const botao = document.getElementById('btnSubmit');
+
+        form.addEventListener('submit', function () {
+            botao.innerText = "Cadastrando...";
+            botao.disabled = true;
+        });
+
+    </script>
+
+</body>
+</html>

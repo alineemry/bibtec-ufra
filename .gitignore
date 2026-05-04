@@ -1,0 +1,26 @@
+# Ambiente virtual
+venv/
+env/
+ENV/
+
+# Arquivos Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+
+# Banco de dados
+*.sqlite3
+*.db
+
+# Arquivos de configuração sensíveis
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Logs
+*.log

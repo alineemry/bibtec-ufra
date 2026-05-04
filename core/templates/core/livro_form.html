@@ -1,0 +1,152 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Livro - BIBTEC{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-form {
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 40px 20px;
+        border-radius: 6px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        color: #2d4c2e;
+        font-family: Georgia, serif;
+    }
+
+    form p {
+        margin-bottom: 16px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: bold;
+        color: #1f3f20;
+    }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #6f8f73;
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    .select2-container {
+        width: 100% !important;
+    }
+
+    .acoes {
+        margin-top: 24px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 10px 18px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .btn-salvar {
+        background: #1B4314;
+        color: white;
+    }
+
+    .btn-voltar {
+        background: #dbe9dc;
+        color: #1E4D12;
+    }
+</style>
+
+<div class="secao-form">
+
+    <h2>
+        {% if form.instance.pk %}
+            Editar Livro
+        {% else %}
+            Novo Livro
+        {% endif %}
+    </h2>
+
+    <form method="post" id="livroForm">
+        {% csrf_token %}
+
+        {{ form.titulo.label_tag }}
+        {{ form.titulo }}
+
+        {{ form.autor.label_tag }}
+        {{ form.autor }}
+
+        {{ form.isbn.label_tag }}
+        {{ form.isbn }}
+
+        {{ form.editora.label_tag }}
+        {{ form.editora }}
+
+        {{ form.ano_publicacao.label_tag }}
+        {{ form.ano_publicacao }}
+
+        {{ form.quantidade.label_tag }}
+        {{ form.quantidade }}
+
+        {{ form.capa_url.label_tag }}
+        {{ form.capa_url }}
+
+        {{ form.sinopse.label_tag }}
+        {{ form.sinopse }}
+
+        <label>Áreas de Conhecimento</label>
+        <select name="areas_conhecimento" id="id_areas_conhecimento" multiple class="select2-multiple">
+            {% for area in form.areas_conhecimento.field.queryset %}
+                <option value="{{ area.id }}" {% if area in form.areas_conhecimento.initial %}selected{% endif %}>
+                    {{ area.nome }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label>Palavras-chave</label>
+        <select name="palavras_chave" id="id_palavras_chave" multiple class="select2-multiple">
+            {% for palavra in form.palavras_chave.field.queryset %}
+                <option value="{{ palavra.id }}" {% if palavra in form.palavras_chave.initial %}selected{% endif %}>
+                    {{ palavra.nome }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <div class="acoes">
+            <button type="submit" class="btn btn-salvar">Salvar</button>
+
+            <a href="{% url 'core:admin_livros_lista' %}">
+                <button type="button" class="btn btn-voltar">Voltar</button>
+            </a>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#id_areas_conhecimento, #id_palavras_chave').select2({
+            placeholder: 'Selecione as opções',
+            allowClear: true,
+            width: 'resolve'
+        });
+    });
+</script>
+
+{% endblock %}

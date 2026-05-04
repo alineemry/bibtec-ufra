@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-mail enviado - BIBTEC</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #B8D8BE;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 400px;
+            background-color: #A3C9AD;
+            border: 1.5px solid #1E4D12;
+            border-radius: 14px;
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.18);
+            padding: 28px 24px;
+            text-align: center;
+        }
+
+        h1, h2, p {
+            color: #1E4D12;
+        }
+
+        h1 {
+            letter-spacing: 4px;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 16px;
+            color: #1E4D12;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>BIBTEC</h1>
+        <h2>E-mail enviado</h2>
+        <p>Se existir uma conta com o e-mail informado, você receberá as instruções para redefinir sua senha.</p>
+        <a href="{% url 'login' %}">Voltar para o login</a>
+    </div>
+</body>
+</html>

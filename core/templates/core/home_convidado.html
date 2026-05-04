@@ -1,0 +1,210 @@
+{% extends 'core/base.html' %}
+
+{% block title %}BIBTEC - Visitante{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-livros {
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 40px 20px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+    }
+
+    .secao-topo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+
+    .secao-topo h2 {
+        margin: 0;
+        font-size: 22px;
+        color: #2d4c2e;
+        font-family: Georgia, serif;
+    }
+
+    .texto-apoio {
+        color: #2a4a2b;
+        margin-bottom: 28px;
+        line-height: 1.5;
+    }
+
+    .livros-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+
+    .livro-card {
+        text-align: center;
+    }
+
+    .livro-capa {
+        width: 100%;
+        height: 250px;
+        border-radius: 4px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #1f5a09;
+        color: white;
+    }
+
+    .livro-capa img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    
+    .livro-titulo {
+        font-size: 14px;
+        color: #2a4a2b;
+        margin: 10px 0 12px;
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-detalhes,
+    .btn-login {
+        background-color: #1f5a16;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-detalhes:hover,
+    .btn-login:hover {
+        background-color: #174410;
+        transform: translateY(-1px);
+    }
+
+    .bloco-acesso {
+        margin-top: 24px;
+        text-align: center;
+        color: #2a4a2b;
+    }
+
+    .bloco-acesso a {
+        text-decoration: none;
+    }
+    
+    .btn-detalhes,
+    .btn-mais {
+        background-color: #1f5a16;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-detalhes:hover,
+    .btn-mais:hover {
+        background-color: #174410;
+        transform: translateY(-1px);
+    }
+
+    .btn-mais {
+        white-space: nowrap;
+    }
+
+    .paginacao {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .paginacao a,
+    .paginacao span {
+        padding: 8px 12px;
+        border-radius: 16px;
+        background-color: #dbe9dc;
+        color: #1f3f20;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .paginacao .atual {
+        background-color: #1B4314;
+        color: white;
+        font-weight: bold;
+    }
+</style>
+
+<div class="secao-livros">
+    <div class="secao-topo">
+        <h2>Acervo da Biblioteca</h2>
+        
+    </div>
+
+    <div class="texto-apoio">
+        Você está navegando como visitante. Nesta área, é possível consultar o acervo disponível e visualizar os detalhes dos livros. Para receber recomendações personalizadas e acessar a estante pessoal, é necessário entrar com uma conta.
+    </div>
+
+    <div class="livros-grid">
+        {% for livro in page_obj %}
+            <div class="livro-card">
+                <a href="{% url 'core:detalhe_livro_publico' livro.id %}">
+                    <div class="livro-capa">
+                        {% if livro.capa_url %}
+                            <img src="{{ livro.capa_url }}" alt="{{ livro.titulo }}">
+                        {% else %}
+                            <div>SEM<br>CAPA</div>
+                        {% endif %}
+                    </div>
+                </a>
+
+                <div class="livro-titulo">{{ livro.titulo|default:"Sem Nome" }}</div>
+                <div class="livro-autor">{{ livro.autor|default:"Autor não informado" }}</div>
+
+                <a href="{% url 'core:detalhe_livro_publico' livro.id %}">
+                    <button class="btn-detalhes" type="button">Ver Detalhes</button>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="paginacao">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <span class="atual">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">Próxima</a>
+        {% endif %}
+    </div>
+
+    <div class="bloco-acesso">
+        <p>Deseja acessar recomendações personalizadas?</p>
+        <a href="{% url 'login' %}">
+            <button class="btn-login" type="button">Entrar no sistema</button>
+        </a>
+    </div>
+</div>
+{% endblock %}

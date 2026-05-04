@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Página inicial</title>
+</head>
+<body>
+<form method="get" action="{% url 'core:buscar_livros' %}">
+    <input
+        type="text"
+        name="q"
+        placeholder="Buscar por título ou autor"
+    >
+
+    <select name="area">
+        <option value="">Todas as áreas</option>
+        {% for area in areas %}
+            <option value="{{ area.id }}">{{ area.nome }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Buscar</button>
+</form>
+
+<hr>
+
+<h1>Bem-vindo(a), {{ request.user.username }}</h1>
+
+<!-- LIVROS DO ACERVO -->
+<h3>Livros disponíveis no acervo</h3>
+
+{% for livro in livros_acervo %}
+    <div>
+        <strong>{{ livro.titulo }}</strong><br>
+        Áreas:
+        {% for area in livro.areas_conhecimento.all %}
+            {{ area.nome }}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            Não informada
+        {% endfor %}
+
+        <a href="{% url 'core:detalhe_livro' livro.id %}">Ver detalhes</a>
+
+    </div>
+{% endfor %}
+
+<!-- LIVROS RECOMENDADOS -->
+<h3>Recomendados para você</h3>
+
+{% if recomendacoes %}
+    {% for livro in recomendacoes %}
+        <div>
+
+            <strong>{{ livro.titulo|default:"Título não informado" }}</strong><br>
+
+            <strong>Áreas:</strong>
+            {% for area in livro.areas_conhecimento.all %}
+                {{ area.nome }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+                Não informada
+            {% endfor %}
+            <br>
+
+            <a href="{% url 'core:detalhe_livro' livro.id %}">
+                Ver detalhes
+            </a>
+
+        </div>
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>Nenhuma recomendação disponível no momento.</p>
+{% endif %}
+
+<nav>
+    <a href="{% url 'core:estante' %}">📚 Minha Estante</a> |
+    <form method="post" action="{% url 'core:logout' %}">
+        {% csrf_token %}
+        <button type="submit">Sair</button>
+    </form>
+</nav>
+
+
+</body>
+</html>

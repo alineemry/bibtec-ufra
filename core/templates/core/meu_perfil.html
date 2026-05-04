@@ -1,0 +1,228 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Meu Perfil - BIBTEC{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-perfil {
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 40px 20px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+    }
+
+    .secao-perfil h2 {
+        margin: 0 0 24px;
+        font-size: 26px;
+        color: #2d4c2e;
+        font-family: Georgia, serif;
+    }
+
+    .perfil-topo {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+    }
+
+    .perfil-avatar {
+        width: 88px;
+        height: 88px;
+        border-radius: 50%;
+        background-color: #1f5a16;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+
+    .perfil-nome {
+        min-width: 0;
+        max-width: 320px;
+        text-align: left;
+    }
+
+    .perfil-nome h3 {
+        margin: 0 0 6px;
+        color: #2d4c2e;
+        font-size: 24px;
+        line-height: 1.3;
+        word-break: break-word;
+    }
+
+    .perfil-nome p {
+        margin: 0;
+        color: #466848;
+        max-width: 320px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 14px;
+        opacity: 0.85;
+        text-align: left;
+    }
+
+    .dados-box {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .dado-item {
+        background-color: #dbe9dc;
+        border-radius: 8px;
+        padding: 14px 16px;
+        min-width: 0;
+    }
+
+    .dado-item strong {
+        display: block;
+        color: #1f3f20;
+        margin-bottom: 6px;
+    }
+
+    .dado-item span {
+        color: #2a4a2b;
+        display: block;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+    }
+
+    .acoes-perfil {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .acoes-finais {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .btn-acao {
+        background-color: #1f5a16;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 18px;
+        cursor: pointer;
+        font-size: 13px;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-acao:hover {
+        background-color: #174410;
+        transform: translateY(-1px);
+    }
+
+    .btn-perigo {
+        background-color: #9c2f2f;
+    }
+
+    .btn-perigo:hover {
+        background-color: #842626;
+    }
+
+    .breadcrumb {
+        margin-bottom: 20px;
+        padding: 8px 0;
+        font-size: 14px;
+        color: #2a4a2b;
+    }
+
+    .breadcrumb a {
+        color: #1f5a16;
+        text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumb span {
+        font-weight: bold;
+        color: #1f3f20;
+    }
+</style>
+
+<div class="secao-perfil">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="{% url 'core:recomendacoes' %}">Home</a> / 
+        <span>Meu Perfil</span>
+    </div>
+
+    <h2>Meu Perfil</h2>
+
+    <div class="perfil-topo">
+        <div class="perfil-avatar">
+            {{ user_auth.username|slice:":1"|upper }}
+        </div>
+
+        <div class="perfil-nome">
+            <h3>{{ perfil_usuario.nome }}</h3>
+            <p>@{{ user_auth.username }}</p>
+        </div>
+    </div>
+
+    <div class="dados-box">
+        <div class="dado-item">
+            <strong>Nome</strong>
+            <span>{{ perfil_usuario.nome }}</span>
+        </div>
+
+        <div class="dado-item">
+            <strong>Nome de usuário</strong>
+            <span>{{ user_auth.username }}</span>
+        </div>
+
+        <div class="dado-item">
+            <strong>E-mail</strong>
+            <span>{{ user_auth.email }}</span>
+        </div>
+
+        <div class="dado-item">
+            <strong>Perfil acadêmico</strong>
+            <span>{{ perfil_usuario.perfil_academico }}</span>
+        </div>
+
+        <div class="dado-item">
+            <strong>Data de cadastro</strong>
+            <span>{{ perfil_usuario.data_cadastro }}</span>
+        </div>
+    </div>
+
+    <div class="acoes-perfil">
+        <a href="{% url 'core:atualizar_perfil' %}">
+            <button class="btn-acao" type="button">Editar meus dados</button>
+        </a>
+
+        <a href="{% url 'core:usuario_areas' %}">
+            <button class="btn-acao" type="button">Atualizar áreas de interesse</button>
+        </a>
+
+        <a href="{% url 'core:estante' %}">
+            <button class="btn-acao" type="button">Ver minha estante</button>
+        </a>
+
+        <a href="{% url 'core:excluir_propria_conta' %}">
+            <button class="btn-acao btn-perigo" type="button">Excluir minha conta</button>
+        </a>
+    </div>
+
+    <div class="acoes-finais">
+        <a href="{% url 'core:recomendacoes' %}">
+            <button class="btn-acao" type="button">Ir para a página inicial</button>
+        </a>
+    </div>
+</div>
+
+{% endblock %}

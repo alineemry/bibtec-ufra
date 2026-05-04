@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - BIBTEC</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #B8D8BE;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 400px;
+            background-color: #A3C9AD;
+            border: 1.5px solid #1E4D12;
+            border-radius: 14px;
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.18);
+            padding: 28px 24px;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 18px;
+        }
+
+        .logo-area img {
+            width: 90px;
+            max-width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .logo-area h1 {
+            margin: 0;
+            font-size: 28px;
+            letter-spacing: 4px;
+            color: #1E4D12;
+        }
+
+        .titulo {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #1E4D12;
+            margin: 22px 0 24px;
+            text-transform: uppercase;
+            text-shadow: 0.5px 0.5px 0 #dcebdc;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            color: #1E4D12;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            height: 44px;
+            padding: 10px 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #FFFFFF;
+            font-size: 14px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 42px;
+        }
+
+        /* AJUSTE DO BOTÃO DE SENHA */
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-size: 20px; /* Aumentado para melhor visualização do ícone de texto */
+            color: #1E4D12; /* Cor padronizada com o BIBTEC */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .forgot-password {
+            display: inline-block;
+            margin-top: 8px;
+            color: #631A1A;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .btn-primary {
+            width: 100%;
+            height: 44px;
+            border: none;
+            border-radius: 8px;
+            background-color: #1B4314;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background-color: #14350f;
+        }
+
+        .link-center {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .link-center a {
+            color: #1E4D12;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .link-center a:hover {
+            text-decoration: underline;
+        }
+
+        .cadastro-area {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .cadastro-area p {
+            margin: 0 0 6px;
+            color: #1E4D12;
+        }
+
+        .cadastro-area a {
+            color: #1E4D12;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .cadastro-area a:hover {
+            text-decoration: underline;
+        }
+
+        .erro-geral {
+            background-color: #f8d7da;
+            color: #631A1A;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 22px 18px;
+            }
+
+            .logo-area h1 {
+                font-size: 24px;
+            }
+
+            .titulo {
+                font-size: 18px;
+            }
+        }
+
+        .loader {
+            width: 14px;
+            height: 14px;
+            border: 2px solid white;
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            display: inline-block;
+            animation: spin 0.6s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <div class="logo-area">
+            <img src="/media/bibtec_logo.png" 
+                alt="Logo BIBTEC" 
+                style="max-width: 100px; width: 100%; height: auto;">
+            <h1>BIBTEC</h1>
+        </div>
+
+        <div class="titulo">Autenticação do Usuário</div>
+
+        {% if form.errors %}
+            <div class="erro-geral">
+                Nome de usuário/e-mail ou senha inválidos.
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="id_username">Nome de usuário ou E-mail</label>
+                <input
+                    type="text"
+                    name="username"
+                    id="id_username"
+                    placeholder="Digite seu nome de usuário ou e-mail"
+                    aria-label="Nome de usuário ou e-mail"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="id_password">Senha</label>
+                <div class="password-wrapper">
+                    <input
+                        type="password"
+                        name="password"
+                        id="id_password"
+                        placeholder="Digite sua senha"
+                        aria-label="Senha"
+                        required
+                    >
+                    <button
+                        type="button"
+                        class="toggle-password"
+                        id="toggleBtn"
+                        aria-label="Mostrar ou ocultar senha"
+                        onclick="togglePassword()"
+                    >
+                        <svg id="eyeSvg" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path id="eyePath" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle id="eyeCircle" cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </button>
+                </div>
+
+                <a href="{% url 'core:recuperar_senha' %}" class="forgot-password">
+                    Esqueci minha senha
+                </a>
+                
+            </div>
+
+            <button type="submit" class="btn-primary" id="btnSubmit">
+                <span id="btnText">Entrar</span>
+            </button>
+
+        </form>
+
+        <div class="link-center">
+            <a href="{% url 'core:pagina_inicial_convidado' %}">Entrar como convidado</a>
+        </div>
+
+        <div class="cadastro-area">
+            <p>Não tem conta?</p>
+            <a href="{% url 'core:cadastro' %}">Cadastre-se</a>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('id_password');
+            const eyePath = document.getElementById('eyePath');
+            const eyeCircle = document.getElementById('eyeCircle');
+
+            const openEye = "M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z";
+            const closedEye = "M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24M1 1l22 22";
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyePath.setAttribute('d', closedEye);
+                eyeCircle.style.display = 'none'; 
+            } else {
+                passwordInput.type = 'password';
+                eyePath.setAttribute('d', openEye);
+                eyeCircle.style.display = 'block'; 
+            }
+        }
+    
+        const form = document.querySelector('form');
+        const botao = document.getElementById('btnSubmit');
+        const texto = document.getElementById('btnText');
+        const loader = document.getElementById('btnLoader');
+
+        form.addEventListener('submit', function () {
+            texto.innerText = "Entrando...";
+            loader.style.display = "inline";
+            botao.disabled = true;
+        });
+    </script>
+</body>
+</html>

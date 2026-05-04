@@ -1,0 +1,352 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Busca de Livros - BIBTEC{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-busca {
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 40px 20px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+    }
+
+    .secao-busca h2 {
+        margin: 0 0 12px;
+        font-size: 22px;
+        color: #2d4c2e;
+        font-family: Georgia, serif;
+    }
+
+    .texto-apoio {
+        color: #2a4a2b;
+        margin-bottom: 24px;
+        line-height: 1.5;
+    }
+
+    .filtros-container {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+        padding: 15px;
+        background-color: #d4e8d4;
+        border-radius: 12px;
+    }
+
+    .filtro-grupo {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .filtro-grupo h4 {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+        color: #1f3f20;
+    }
+
+    .filtro-grupo select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #6f8f73;
+        border-radius: 20px;
+        background: white;
+        font-size: 14px;
+    }
+
+    .form-busca {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+    }
+
+    .form-busca input {
+        flex: 1;
+        min-width: 240px;
+        padding: 10px 12px;
+        border: 1px solid #6f8f73;
+        border-radius: 20px;
+        background: white;
+        font-size: 14px;
+    }
+
+    .btn-buscar {
+        background-color: #1f5a16;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 18px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-buscar:hover {
+        background-color: #174410;
+        transform: translateY(-1px);
+    }
+
+    .btn-limpar {
+        background-color: #6f8f73;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 18px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn-limpar:hover {
+        background-color: #5a735e;
+    }
+
+    .resultado-info {
+        color: #2a4a2b;
+        margin-bottom: 20px;
+    }
+
+    .livros-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+
+    .livro-card {
+        text-align: center;
+        border-radius: 8px;
+        padding: 12px;
+        transition: transform 0.2s ease;
+    }
+
+    .livro-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .livro-visualizado {
+        opacity: 0.85;
+        background-color: #e8f0e8;
+        border: 1px solid #a3c9ad;
+        border-radius: 8px;
+    }
+
+    .livro-visualizado:hover {
+        opacity: 1;
+    }
+
+    .livro-capa {
+        width: 100%;
+        height: 250px;
+        border-radius: 4px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #1f5a09;
+        color: white;
+    }
+
+    .livro-capa img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .livro-titulo {
+        font-size: 14px;
+        color: #2a4a2b;
+        margin: 10px 0 6px;
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .livro-autor {
+        font-size: 13px;
+        color: #466848;
+        margin-bottom: 12px;
+        min-height: 18px;
+    }
+
+    .btn-detalhes {
+        background-color: #1f5a16;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-detalhes:hover {
+        background-color: #174410;
+        transform: translateY(-1px);
+    }
+
+    .voltar-area {
+        margin-top: 28px;
+        text-align: center;
+    }
+
+    .voltar-area a {
+        text-decoration: none;
+        color: #1f5a16;
+        font-weight: bold;
+    }
+
+    .breadcrumb {
+        margin-bottom: 20px;
+        padding: 8px 0;
+        font-size: 14px;
+        color: #2a4a2b;
+    }
+
+    .breadcrumb a {
+        color: #1f5a16;
+        text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumb span {
+        font-weight: bold;
+        color: #1f3f20;
+    }
+</style>
+
+<div class="secao-busca">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="{% url 'core:recomendacoes' %}">Home</a> / 
+        <span>Busca de Livros</span>
+    </div>
+
+    <div class="topo-admin">
+        <h2>Busca de Livros</h2>
+
+    <div class="texto-apoio">
+        Pesquise no acervo por título, autor, área do conhecimento ou palavra-chave.
+    </div>
+
+    <!-- Formulário principal de busca -->
+    <form method="get" action="{% url 'core:buscar_livros' %}" class="form-busca">
+        <input type="text" name="q" placeholder="Buscar por título ou autor" value="{{ termo }}">
+        <button type="submit" class="btn-buscar">Buscar</button>
+        {% if termo or area_selecionada or palavra_selecionada %}
+            <a href="{% url 'core:buscar_livros' %}" class="btn-limpar">Limpar filtros</a>
+        {% endif %}
+    </form>
+
+    <!-- Filtros laterais (áreas e palavras-chave) -->
+    <div class="filtros-container">
+        <div class="filtro-grupo">
+            <h4> Áreas do Conhecimento</h4>
+            <select name="area" onchange="this.form.submit()" form="filtro-form">
+                <option value="">Todas as áreas</option>
+                {% for area in areas %}
+                    <option value="{{ area.id }}" {% if area_selecionada == area.id|stringformat:"s" %}selected{% endif %}>
+                        {{ area.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="filtro-grupo">
+            <h4> Palavras-chave</h4>
+            <select name="palavra" onchange="this.form.submit()" form="filtro-form">
+                <option value="">Todas as palavras</option>
+                {% for palavra in palavras %}
+                    <option value="{{ palavra.id }}" {% if palavra_selecionada == palavra.id|stringformat:"s" %}selected{% endif %}>
+                        {{ palavra.nome }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Form oculto para os filtros -->
+    <form id="filtro-form" method="get" action="{% url 'core:buscar_livros' %}">
+        <input type="hidden" name="q" value="{{ termo }}">
+    </form>
+
+    {% if termo or area_selecionada or palavra_selecionada %}
+        <div class="resultado-info">
+            Resultado da busca
+            {% if termo %}
+                para <strong>"{{ termo }}"</strong>
+            {% endif %}
+            {% if area_selecionada %}
+                na área selecionada
+            {% endif %}
+            {% if palavra_selecionada %}
+                com palavra-chave selecionada
+            {% endif %}
+            .
+        </div>
+    {% endif %}
+
+    {% if page_obj %}
+        <div class="livros-grid">
+            {% for livro in page_obj %}
+                <div class="livro-card {% if livro.id in livros_visualizados %}livro-visualizado{% endif %}">
+                    <a href="{% url 'core:detalhe_livro' livro.id %}?from_busca=1">
+                        <div class="livro-capa">
+                            {% if livro.capa_url %}
+                                <img src="{{ livro.capa_url }}" alt="{{ livro.titulo }}">
+                            {% else %}
+                                <div>SEM<br>CAPA</div>
+                            {% endif %}
+                        </div>
+                    </a>
+
+                    <div class="livro-titulo">{{ livro.titulo|default:"Sem Nome" }}</div>
+                    <div class="livro-autor">{{ livro.autor|default:"Autor não informado" }}</div>
+
+                    <a href="{% url 'core:detalhe_livro' livro.id %}?from_busca=1">
+                        <button class="btn-detalhes" type="button">Ver Detalhes</button>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+
+        <!-- 🔥 PAGINAÇÃO -->
+        <div class="paginacao">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if termo %}&q={{ termo }}{% endif %}{% if area_selecionada %}&area={{ area_selecionada }}{% endif %}{% if palavra_selecionada %}&palavra={{ palavra_selecionada }}{% endif %}">
+                    ← Anterior
+                </a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="atual">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}{% if termo %}&q={{ termo }}{% endif %}{% if area_selecionada %}&area={{ area_selecionada }}{% endif %}{% if palavra_selecionada %}&palavra={{ palavra_selecionada }}{% endif %}">
+                        {{ num }}
+                    </a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if termo %}&q={{ termo }}{% endif %}{% if area_selecionada %}&area={{ area_selecionada }}{% endif %}{% if palavra_selecionada %}&palavra={{ palavra_selecionada }}{% endif %}">
+                    Próxima →
+                </a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p class="resultado-info">Nenhum livro encontrado.</p>
+    {% endif %}
+
+    <div class="voltar-area">
+        <a href="{% url 'core:recomendacoes' %}">← Voltar para a página inicial</a>
+    </div>
+</div>
+
+{% endblock %}

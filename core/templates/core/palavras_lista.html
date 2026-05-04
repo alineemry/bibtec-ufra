@@ -1,0 +1,300 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Gerenciar Palavras-chave - BIBTEC{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-admin {
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 30px 20px;
+        border-radius: 6px;
+    }
+
+    .topo-admin {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .topo-admin h2 {
+        margin: 0;
+        font-size: 26px;
+        color: #2d4c2e;
+        font-family: Georgia, serif;
+    }
+
+    .subtexto {
+        margin: 0 0 20px;
+        color: #2a4a2b;
+        line-height: 1.5;
+    }
+
+    .btn-novo {
+        background-color: #1B4314;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 18px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .btn-novo:hover {
+        background-color: #14350f;
+    }
+
+    .busca-admin {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+
+    .busca-admin input {
+        flex: 1;
+        min-width: 260px;
+        padding: 10px 12px;
+        border-radius: 20px;
+        border: 1px solid #6f8f73;
+        background: white;
+        font-size: 14px;
+    }
+
+    .btn-busca {
+        background-color: #1f5a16;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 18px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .btn-busca:hover {
+        background-color: #174410;
+    }
+
+    .btn-limpar {
+        background-color: #dbe9dc;
+        color: #1E4D12;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 18px;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+    .btn-limpar:hover {
+        background-color: #cfe0d1;
+    }
+
+    .resultado-busca {
+        margin-bottom: 16px;
+        color: #2a4a2b;
+        font-size: 14px;
+    }
+
+    .tabela {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .tabela th {
+        background-color: #1f5a16;
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .tabela td {
+        padding: 12px;
+        border-bottom: 1px solid #ddd;
+        font-size: 14px;
+        color: #2a4a2b;
+        vertical-align: middle;
+    }
+
+    .tabela tr:hover {
+        background-color: #f1f7f2;
+    }
+
+    .acoes {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .acoes-finais {
+        display: flex;
+        justify-content: flex-end;
+        margin: 20px 0 0;
+        
+    }
+
+    .btn-acao {
+        border: none;
+        border-radius: 14px;
+        padding: 6px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        color: white;
+        background-color: #1f5a16;
+    }
+
+    .btn-editar {
+        background-color: #2e7d32;
+    }
+
+    .btn-editar:hover {
+        background-color: #256628;
+    }
+
+    .btn-excluir {
+        background-color: #c62828;
+    }
+
+    .btn-excluir:hover {
+        background-color: #a61f1f;
+    }
+
+    .vazio {
+        margin-top: 20px;
+        text-align: center;
+        color: #2a4a2b;
+    }
+
+    .breadcrumb {
+        margin-bottom: 20px;
+        padding: 8px 0;
+        font-size: 14px;
+        color: #2a4a2b;
+    }
+
+    .breadcrumb a {
+        color: #1f5a16;
+        text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    .breadcrumb span {
+        font-weight: bold;
+        color: #1f3f20;
+    }
+</style>
+
+<div class="secao-admin">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="{% url 'core:recomendacoes' %}">Home</a> / 
+        <span>Gerenciar Palavras-chave</span>
+    </div>
+
+    <div class="topo-admin">
+        <h2>Gerenciar Palavras-chave</h2>
+
+        <a href="{% url 'core:admin_palavra_criar' %}">
+            <button class="btn-novo">+ Nova Palavra-chave</button>
+        </a>
+    </div>
+
+    <p class="subtexto">
+        Nesta área, o administrador pode cadastrar, editar, excluir e localizar palavras-chave utilizadas para apoiar a categorização e recomendação de livros.
+    </p>
+
+    <form method="get" class="busca-admin">
+        <input
+            type="text"
+            name="q"
+            value="{{ termo }}"
+            placeholder="Buscar palavra-chave"
+        >
+        <button type="submit" class="btn-busca">Buscar</button>
+
+        {% if termo %}
+            <a href="{% url 'core:admin_palavras_lista' %}">
+                <button type="button" class="btn-limpar">Limpar</button>
+            </a>
+        {% endif %}
+    </form>
+
+    {% if termo %}
+        <div class="resultado-busca">
+            Resultados para: <strong>{{ termo }}</strong>
+        </div>
+    {% endif %}
+
+    {% if page_obj %}
+        <table class="tabela">
+            <thead>
+                <tr>
+                    <th>Palavra-chave</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for palavra in page_obj %}
+                    <tr>
+                        <td>{{ palavra.nome }}</td>
+                        <td>
+                            <div class="acoes">
+                                <a href="{% url 'core:admin_palavra_editar' palavra.id %}">
+                                    <button class="btn-acao btn-editar">Editar</button>
+                                </a>
+
+                                <form method="post" action="{% url 'core:admin_palavra_excluir' palavra.id %}"
+                                      onsubmit="return confirm('Tem certeza que deseja excluir a palavra-chave {{ palavra.nome }}? Esta ação não pode ser desfeita.');" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-acao btn-excluir">Excluir</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="paginacao">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if termo %}&q={{ termo }}{% endif %}">Anterior</a>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <span class="atual">{{ num }}</span>
+                {% else %}
+                    <a href="?page={{ num }}{% if termo %}&q={{ termo }}{% endif %}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if termo %}&q={{ termo }}{% endif %}">Próxima</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="vazio">Nenhuma palavra-chave encontrada.</div>
+    {% endif %}
+
+    <div class="acoes-finais">
+        <a href="{% url 'core:recomendacoes' %}">
+            <button class="btn-acao" type="button">Ir para a página inicial</button>
+        </a>
+    </div>
+
+</div>
+
+{% endblock %}

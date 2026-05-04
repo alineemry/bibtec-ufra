@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Áreas de Interesse - BIBTEC</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #B8D8BE;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 760px;
+            background-color: #A3C9AD;
+            border: 1.5px solid #1E4D12;
+            border-radius: 14px;
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.18);
+            padding: 28px 24px;
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 14px;
+        }
+
+        .logo-area img {
+            width: 72px;
+            max-width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .logo-area h1 {
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 4px;
+            color: #1E4D12;
+        }
+
+        .titulo {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #1E4D12;
+            margin: 18px 0 22px;
+            text-transform: none;
+            text-shadow: 0.5px 0.5px 0 #dcebdc;
+            line-height: 1.4;
+        }
+
+        .search-area {
+            margin-bottom: 18px;
+        }
+
+        .search-input {
+            width: 100%;
+            height: 44px;
+            padding: 10px 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #FFFFFF;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #6c757d;
+        }
+
+        .chips-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            min-height: 70px;
+        }
+
+        .chip-item {
+            position: relative;
+        }
+
+        .chip-checkbox {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .chip-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background-color: #FFFFFF;
+            border: 1.5px solid #1E4D12;
+            color: #1E4D12;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s ease;
+            user-select: none;
+        }
+
+        .chip-label:hover {
+            background-color: #dcebdc;
+            transform: translateY(-1px);
+        }
+
+        .chip-checkbox:checked + .chip-label {
+            background-color: #1B4314;
+            color: #FFFFFF;
+            border-color: #1B4314;
+        }
+
+        .chip-check {
+            display: none;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .chip-checkbox:checked + .chip-label .chip-check {
+            display: inline;
+        }
+
+        .more-options-area {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .btn-more {
+            border: 1.5px solid #1E4D12;
+            background-color: #FFFFFF;
+            color: #1E4D12;
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-more:hover {
+            background-color: #e9f3ea;
+        }
+
+        .footer-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .btn-secondary,
+        .btn-primary {
+            min-width: 140px;
+            height: 44px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .btn-secondary {
+            border: 1.5px solid #1E4D12;
+            background-color: #FFFFFF;
+            color: #1E4D12;
+        }
+
+        .btn-secondary:hover {
+            background-color: #e9f3ea;
+        }
+
+        .btn-primary {
+            border: none;
+            background-color: #1B4314;
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background-color: #14350f;
+        }
+
+        .btn-primary:disabled {
+            background-color: #6f8f71;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .selection-info {
+            text-align: center;
+            color: #1E4D12;
+            font-size: 14px;
+            margin-bottom: 16px;
+            font-weight: bold;
+        }
+
+        .empty-message {
+            width: 100%;
+            text-align: center;
+            color: #631A1A;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .auth-card {
+                padding: 22px 18px;
+            }
+
+            .logo-area h1 {
+                font-size: 22px;
+            }
+
+            .titulo {
+                font-size: 18px;
+            }
+
+            .footer-actions {
+                flex-direction: column;
+            }
+
+            .btn-secondary,
+            .btn-primary {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <div class="logo-area">
+            <img src="/media/bibtec_logo.png"
+                 alt="Logo BIBTEC"
+                 style="max-width: 80px; width: 100%; height: auto;">
+            <h1>BIBTEC</h1>
+        </div>
+
+        <div class="titulo">
+            Para personalizar suas recomendações, conte-nos sobre seus interesses:
+        </div>
+
+        <form method="post" id="interessesForm">
+            {% csrf_token %}
+
+            <div class="search-area">
+                <input
+                    type="text"
+                    id="searchInteresses"
+                    class="search-input"
+                    placeholder="Buscar interesse, ex: Python, Django, Banco de Dados..."
+                >
+            </div>
+
+            <div class="selection-info" id="selectionInfo">
+                Nenhum interesse selecionado.
+            </div>
+
+            <div class="chips-container" id="chipsContainer">
+                {% for area in areas %}
+                    <div class="chip-item" data-name="{{ area.nome|lower }}">
+                        <input
+                            type="checkbox"
+                            name="areas"
+                            value="{{ area.id }}"
+                            id="area_{{ area.id }}"
+                            class="chip-checkbox"
+                        >
+                        <label for="area_{{ area.id }}" class="chip-label">
+                            <span class="chip-check">✓</span>
+                            <span>{{ area.nome }}</span>
+                        </label>
+                    </div>
+                {% endfor %}
+
+                <div class="empty-message" id="emptyMessage">
+                    Nenhuma área encontrada para a busca informada.
+                </div>
+            </div>
+
+            <div class="more-options-area">
+                <button type="button" class="btn-more" id="btnMoreOptions">
+                    Mais opções...
+                </button>
+            </div>
+
+            <div class="footer-actions">
+                
+
+                <button type="submit" class="btn-primary" id="btnAvancar" disabled>
+                    Avançar →
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInteresses');
+        const checkboxes = document.querySelectorAll('.chip-checkbox');
+        const chipItems = document.querySelectorAll('.chip-item');
+        const btnAvancar = document.getElementById('btnAvancar');
+        const selectionInfo = document.getElementById('selectionInfo');
+        const emptyMessage = document.getElementById('emptyMessage');
+        const btnMoreOptions = document.getElementById('btnMoreOptions');
+
+        let visibleCount = 12;
+
+        function updateSelectedState() {
+            const selected = document.querySelectorAll('.chip-checkbox:checked').length;
+
+            btnAvancar.disabled = selected < 3;
+
+            if (selected === 0) {
+                selectionInfo.textContent = 'Selecione pelo menos 3 interesses.';
+            } else if (selected < 3) {
+                selectionInfo.textContent = `Você selecionou ${selected}. Escolha pelo menos 3 interesses.`;
+            } else {
+                selectionInfo.textContent = `${selected} interesses selecionados.`;
+            }
+        
+        }
+
+        function normalizeText(text) {
+            return text
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
+        }
+
+        function applyFilter() {
+            const term = normalizeText(searchInput.value.trim());
+            let visibleFiltered = 0;
+
+            chipItems.forEach((item, index) => {
+                const name = normalizeText(item.dataset.name || '');
+                const matchesSearch = name.includes(term);
+                const withinLimit = index < visibleCount;
+
+                if (matchesSearch && withinLimit) {
+                    item.style.display = 'block';
+                    visibleFiltered++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            emptyMessage.style.display = visibleFiltered === 0 ? 'block' : 'none';
+
+            if (visibleCount >= chipItems.length) {
+                btnMoreOptions.style.display = 'none';
+            } else {
+                btnMoreOptions.style.display = 'inline-block';
+            }
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateSelectedState);
+        });
+
+        searchInput.addEventListener('input', applyFilter);
+
+        btnMoreOptions.addEventListener('click', function () {
+            visibleCount += 12;
+            applyFilter();
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const seen = new Set();
+
+            chipItems.forEach(item => {
+                const name = normalizeText(item.dataset.name || '');
+                if (seen.has(name)) {
+                    item.remove();
+                } else {
+                    seen.add(name);
+                }
+            });
+
+            updateSelectedState();
+            applyFilter();
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}BIBTEC{% endblock %}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #d7ebe0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 16px 20px 24px;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            background-color: #b7d8c5;
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .logo-area img {
+            height: 62px;
+            display: block;
+        }
+
+        .search-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-form {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #557a5c;
+            border-radius: 24px;
+            padding: 4px 10px;
+        }
+
+        .search-form input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 10px 12px;
+            font-size: 14px;
+            background: transparent;
+        }
+
+        .search-form button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #2c4d2d;
+        }
+
+        .right-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .perfil-link {
+            text-decoration: none;
+            color: #1f3f20;
+        }
+
+        .perfil-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 52px;
+        }
+
+        .perfil-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background-color: #1f5a16;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .perfil-nome {
+            margin-top: 4px;
+            font-size: 11px;
+            text-align: center;
+            max-width: 70px;
+            word-break: break-word;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .menu-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 8px;
+            background-color: #1f5a16;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: 56px;
+            right: 0;
+            min-width: 220px;
+            background-color: #f8fbf8;
+            border: 1px solid #b6c9b7;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+            padding: 10px;
+            z-index: 9999;
+        }
+
+        .user-dropdown a,
+        .user-dropdown span,
+        .user-dropdown strong {
+            display: block;
+            padding: 6px 8px;
+            font-size: 13px;
+            text-decoration: none;
+            color: #2b3b2c;
+        }
+
+        .user-dropdown a:hover {
+            background-color: #e6efe8;
+            border-radius: 4px;
+        }
+
+        .submenu {
+            position: relative;
+        }
+
+        .submenu-content {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 100%;
+            min-width: 170px;
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 6px;
+            z-index: 10000;
+        }
+
+        .submenu:hover .submenu-content {
+            display: block;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        .mensagens {
+            margin-top: 18px;
+        }
+
+        .alert {
+            background-color: #c8e6c9;
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 900px) {
+            header {
+                flex-wrap: wrap;
+            }
+
+            .search-area {
+                order: 3;
+                width: 100%;
+            }
+
+            .search-form {
+                max-width: 100%;
+            }
+        }
+
+        .paginacao {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .paginacao a,
+        .paginacao span {
+            padding: 8px 12px;
+            border-radius: 16px;
+            background-color: #dbe9dc;
+            color: #1f3f20;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .paginacao .atual {
+            background-color: #1B4314;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+
+    <!-- CSS do Select2 -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- jQuery (necessário para Select2) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- JS do Select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        // Função para confirmação de exclusão
+        function confirmarExclusao(mensagem) {
+            return confirm(mensagem || 'Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.');
+        }
+        
+        // Função para confirmação de ações em geral
+        function confirmarAcao(mensagem) {
+            return confirm(mensagem || 'Tem certeza que deseja realizar esta ação?');
+        }
+        
+        // Função para confirmação de alteração de permissões
+        function confirmarPermissao(mensagem) {
+            return confirm(mensagem || 'Tem certeza que deseja alterar as permissões deste usuário?');
+        }
+    </script>
+</head>
+<body>
+
+<div class="page-container">
+    <header>
+        <div class="logo-area">
+            <img src="/media/logo_bibtec.png" alt="Logo BIBTEC">
+        </div>
+
+        <div class="search-area">
+            <form method="get"
+                  action="{% if user.is_authenticated %}{% url 'core:buscar_livros' %}{% else %}{% url 'core:buscar_livros_publico' %}{% endif %}"
+                  class="search-form">
+                <input type="text" name="q" placeholder="Buscar livros por título, autor, palavra-chave ou área do conhecimento...">
+                <button type="submit">⌕</button>
+            </form>
+        </div>
+
+        <div class="right-area">
+            {% if user.is_authenticated %}
+            <a href="{% url 'core:meu_perfil' %}" class="perfil-link">
+                <div class="perfil-box">
+                    <div class="perfil-avatar">
+                        {{ user.username|slice:":1"|upper }}
+                    </div>
+                    <div class="perfil-nome">{{ user.username }}</div>
+                </div>
+            </a>
+            {% endif %}
+
+            <div class="user-menu">
+                <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+                <div id="dropdown" class="user-dropdown">
+                    {% if user.is_authenticated %}
+                        {% if user.is_staff %}
+                            <strong>Gestão</strong>
+                            <a href="{% url 'core:admin_livros_lista' %}">Gerenciar Livros</a>
+                            <a href="{% url 'core:admin_usuarios_lista' %}">Gerenciar Usuários</a>
+
+                            <div class="submenu">
+                                <span>Gerenciar Filtros ▸</span>
+                                <div class="submenu-content">
+                                    <a href="{% url 'core:admin_areas_lista' %}">Áreas</a>
+                                    <a href="{% url 'core:admin_palavras_lista' %}">Palavras-chave</a>
+                                </div>
+                            </div>
+                            <hr>
+                        {% endif %}
+
+                        <strong>Salvos</strong>
+                        <a href="{% url 'core:estante' %}">Minha estante</a>
+
+                        <strong>Filtros</strong>
+                        <a href="{% url 'core:usuario_areas' %}">Áreas de interesse</a>
+
+                        <hr>
+                        <a href="{% url 'core:logout' %}">Sair</a>
+                    {% else %}
+                        <a href="{% url 'login' %}">Entrar</a>
+                        <a href="{% url 'core:cadastro' %}">Cadastrar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="mensagens">
+      {% for message in messages %}
+        <div class="alert">{{ message }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+</div>
+
+<script>
+function toggleMenu() {
+    var menu = document.getElementById("dropdown");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+</script>
+
+</body>
+</html>

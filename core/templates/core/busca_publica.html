@@ -1,0 +1,216 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Busca no Acervo - BIBTEC{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-busca {
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 40px 20px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+    }
+
+    .secao-busca h2 {
+        margin: 0 0 12px;
+        font-size: 22px;
+        color: #2d4c2e;
+        font-family: Georgia, serif;
+    }
+
+    .texto-apoio {
+        color: #2a4a2b;
+        margin-bottom: 24px;
+        line-height: 1.5;
+    }
+
+    .form-busca {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 28px;
+    }
+
+    .form-busca input,
+    .form-busca select {
+        padding: 10px 12px;
+        border: 1px solid #6f8f73;
+        border-radius: 20px;
+        background: white;
+        font-size: 14px;
+    }
+
+    .form-busca input {
+        flex: 1;
+        min-width: 240px;
+    }
+
+    .form-busca select {
+        min-width: 220px;
+    }
+
+    .btn-buscar {
+        background-color: #1f5a16;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 18px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-buscar:hover {
+        background-color: #174410;
+        transform: translateY(-1px);
+    }
+
+    .resultado-info {
+        color: #2a4a2b;
+        margin-bottom: 20px;
+    }
+
+    .livros-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+
+    .livro-card {
+        text-align: center;
+    }
+
+    .livro-capa {
+        width: 100%;
+        height: 250px;
+        border-radius: 4px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #1f5a09;
+        color: white;
+    }
+
+    .livro-capa img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+    
+    .livro-titulo {
+        font-size: 14px;
+        color: #2a4a2b;
+        margin: 10px 0 6px;
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .livro-autor {
+        font-size: 13px;
+        color: #466848;
+        margin-bottom: 12px;
+        min-height: 18px;
+    }
+
+    .btn-detalhes {
+        background-color: #1f5a16;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-detalhes:hover {
+        background-color: #174410;
+        transform: translateY(-1px);
+    }
+
+    .voltar-area {
+        margin-top: 28px;
+        text-align: center;
+    }
+
+    .voltar-area a {
+        text-decoration: none;
+        color: #1f5a16;
+        font-weight: bold;
+    }
+</style>
+
+<div class="secao-busca">
+    <h2>Busca no Acervo</h2>
+
+    <div class="texto-apoio">
+        Pesquise livros disponíveis na biblioteca por título, autor ou área do conhecimento.
+    </div>
+
+    <form method="get" action="{% url 'core:buscar_livros_publico' %}" class="form-busca">
+        <input type="text" name="q" placeholder="Buscar por título ou autor" value="{{ termo }}">
+
+        <select name="area">
+            <option value="">Todas as áreas</option>
+            {% for area in areas %}
+                <option value="{{ area.id }}" {% if area_selecionada == area.id|stringformat:"s" %}selected{% endif %}>
+                    {{ area.nome }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="btn-buscar">Buscar</button>
+    </form>
+
+    {% if termo or area_selecionada %}
+        <div class="resultado-info">
+            Resultado da busca
+            {% if termo %}
+                para <strong>"{{ termo }}"</strong>
+            {% endif %}
+            {% if area_selecionada %}
+                com filtro de área aplicado
+            {% endif %}
+            .
+        </div>
+    {% endif %}
+
+    {% if livros %}
+        <div class="livros-grid">
+            {% for livro in livros %}
+                <div class="livro-card">
+                    <a href="{% url 'core:detalhe_livro_publico' livro.id %}">
+                        <div class="livro-capa">
+                            {% if livro.capa_url %}
+                                <img src="{{ livro.capa_url }}" alt="{{ livro.titulo }}">
+                            {% else %}
+                                <div>SEM<br>CAPA</div>
+                            {% endif %}
+                        </div>
+                    </a>
+
+                    <div class="livro-titulo">{{ livro.titulo|default:"Sem Nome" }}</div>
+                    <div class="livro-autor">{{ livro.autor|default:"Autor não informado" }}</div>
+
+                    <a href="{% url 'core:detalhe_livro_publico' livro.id %}">
+                        <button class="btn-detalhes" type="button">Ver Detalhes</button>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="resultado-info">Nenhum livro encontrado.</p>
+    {% endif %}
+
+    <div class="voltar-area">
+        <a href="{% url 'core:pagina_inicial_convidado' %}">⬅ Voltar para a página inicial do visitante</a>
+    </div>
+</div>
+
+{% endblock %}

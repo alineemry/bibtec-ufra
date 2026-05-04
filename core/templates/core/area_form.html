@@ -1,0 +1,150 @@
+{% extends 'core/base.html' %}
+
+{% block title %}Área - BIBTEC{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-form {
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 40px 20px;
+        border-radius: 6px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    h2 {
+        margin-bottom: 20px;
+        color: #2d4c2e;
+        font-family: Georgia, serif;
+    }
+
+    form p {
+        margin-bottom: 16px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #6f8f73;
+    }
+
+    .acoes {
+        margin-top: 24px;
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn {
+        padding: 10px 18px;
+        border-radius: 20px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .btn-salvar {
+        background: #1B4314;
+        color: white;
+    }
+
+    .btn-voltar {
+        background: #dbe9dc;
+        color: #1E4D12;
+    }
+
+    .chips-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 10px 0 20px;
+    }
+
+    .chip-item {
+        position: relative;
+    }
+
+    .chip-item input {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .chip-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 20px;
+        background: white;
+        border: 1px solid #1E4D12;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: bold;
+        color: #1E4D12;
+        transition: 0.2s;
+    }
+
+    .chip-label:hover {
+        background-color: #e6f2e7;
+    }
+
+    .chip-item input:checked + .chip-label {
+        background-color: #1B4314;
+        color: white;
+    }
+
+    .check {
+        display: none;
+    }
+
+    .chip-item input:checked + .chip-label .check {
+        display: inline;
+    }
+</style>
+
+<div class="secao-form">
+
+    <h2>
+        {% if form.instance.pk %}
+            Editar Área
+        {% else %}
+            Nova Área
+        {% endif %}
+    </h2>
+
+    <form method="post">
+        {% csrf_token %}
+
+        {{ form.nome.label_tag }}
+        {{ form.nome }}
+
+        <label>Palavras-chave</label>
+<!---
+        <div class="chips-container">
+            {% for checkbox in form.palavras_chave %}
+                <div class="chip-item">
+                    {{ checkbox.tag }}
+                    <label for="{{ checkbox.id_for_label }}" class="chip-label">
+                        <span class="check">✓</span>
+                        {{ checkbox.choice_label }}
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+-->
+
+        <div class="acoes">
+            <button type="submit" class="btn btn-salvar">Salvar</button>
+
+            <a href="{% url 'core:admin_areas_lista' %}">
+                <button type="button" class="btn btn-voltar">Voltar</button>
+            </a>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

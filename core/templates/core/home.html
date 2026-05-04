@@ -1,0 +1,304 @@
+{% extends 'core/base.html' %}
+
+{% block title %}BIBTEC - Página Inicial{% endblock %}
+
+{% block content %}
+
+<style>
+    .secao-livros {
+        background-color: #b7d3be;
+        border: 1px solid #5f8265;
+        box-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+        padding: 40px 20px;
+        margin-bottom: 20px;
+        border-radius: 6px;
+    }
+
+    .secao-topo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .secao-topo h2 {
+        margin: 0;
+        font-size: 22px;
+        color: #2d4c2e;
+        font-family: Georgia, serif;
+    }
+
+    .livros-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 20px;
+    }
+
+    .livro-card {
+        text-align: center;
+    }
+
+    .livro-capa {
+        width: 100%;
+        height: 250px;
+        border-radius: 4px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #1f5a09;
+        color: white;
+    }
+
+    .livro-capa img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .livro-titulo {
+        font-size: 14px;
+        color: #2a4a2b;
+        margin: 10px 0 6px;
+        min-height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .livro-autor {
+        font-size: 13px;
+        color: #466848;
+        margin-bottom: 6px;
+        min-height: 18px;
+    }
+
+    .recomendacao-motivo {
+        margin: 8px 10px;
+        padding: 5px 8px;
+        background-color: #e8f0e8;
+        border-radius: 20px;
+        font-size: 11px;
+        color: #1f5a16;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .explicacao {
+        font-size: 12px;
+        color: #466848;
+        margin: 0 0 12px;
+        line-height: 1.4;
+        min-height: 34px;
+    }
+
+    .btn-detalhes,
+    .btn-mais {
+        background-color: #1f5a16;
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 8px 16px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn-detalhes:hover,
+    .btn-mais:hover {
+        background-color: #174410;
+        transform: translateY(-1px);
+    }
+
+    .btn-mais {
+        white-space: nowrap;
+    }
+
+    .explicacao {
+        font-size: 12px;
+        color: #2d4c2e;
+        margin: 6px 0 12px;
+        line-height: 1.4;
+        font-style: italic;
+    }
+
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        padding: 20px;
+    }
+
+    .modal-box {
+        width: 100%;
+        max-width: 420px;
+        background-color: #A3C9AD;
+        border: 1.5px solid #1E4D12;
+        border-radius: 14px;
+        box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.18);
+        padding: 24px 20px;
+        text-align: center;
+    }
+
+    .modal-box h3 {
+        margin: 0 0 12px;
+        color: #1E4D12;
+        font-size: 22px;
+    }
+
+    .modal-box p {
+        margin: 0 0 20px;
+        color: #2a4a2b;
+        line-height: 1.5;
+    }
+
+    .modal-acoes {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-modal-principal,
+    .btn-modal-secundario {
+        min-width: 150px;
+        height: 42px;
+        border: none;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .btn-modal-principal {
+        background-color: #1B4314;
+        color: white;
+    }
+
+    .btn-modal-principal:hover {
+        background-color: #14350f;
+    }
+
+    .btn-modal-secundario {
+        background-color: #dbe9dc;
+        color: #1E4D12;
+    }
+
+    .btn-modal-secundario:hover {
+        background-color: #cfe0d1;
+    }
+</style>
+
+<div class="secao-livros">
+    <div class="secao-topo">
+        <h2>Livros Disponíveis na Biblioteca</h2>
+        <a href="{% url 'core:todos_livros' %}">
+            <button class="btn-mais" type="button">Mais →</button>
+        </a>
+    </div>
+
+    <div class="livros-grid">
+        {% for livro in livros_acervo %}
+            <div class="livro-card">
+                <a href="{% url 'core:detalhe_livro' livro.id %}">
+                    <div class="livro-capa">
+                        {% if livro.capa_url %}
+                            <img src="{{ livro.capa_url }}" alt="{{ livro.titulo }}">
+                        {% else %}
+                            <div>SEM<br>CAPA</div>
+                        {% endif %}
+                    </div>
+                </a>
+
+                <div class="livro-titulo">{{ livro.titulo|default:"Sem Nome" }}</div>
+                <div class="livro-autor">{{ livro.autor|default:"Autor não informado" }}</div>
+
+                <a href="{% url 'core:detalhe_livro' livro.id %}">
+                    <button class="btn-detalhes" type="button">Ver Detalhes</button>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="secao-livros">
+    <div class="secao-topo">
+        <h2>Livros Recomendados para Você</h2>
+        <a href="{% url 'core:todas_recomendacoes' %}">
+            <button class="btn-mais" type="button">Mais →</button>
+        </a>
+    </div>
+
+    <div class="livros-grid">
+        {% for livro in recomendacoes %}
+        <div class="livro-card">
+            <div class="livro-capa">
+                {% if livro.capa_url %}
+                    <img src="{{ livro.capa_url }}" alt="{{ livro.titulo }}">
+                {% else %}
+                    <div>SEM<br>CAPA</div>
+                {% endif %}
+            </div>
+
+            <div class="livro-titulo">{{ livro.titulo }}</div>
+            <div class="livro-autor">{{ livro.autor|default:"Autor não informado" }}</div>
+            
+            <!-- Explicação compacta -->
+            {% if livro.explicacao %}
+            <div class="recomendacao-motivo">
+                 {{ livro.explicacao|first }}
+            </div>
+            {% endif %}
+
+            <a href="{% url 'core:detalhe_livro' livro.id %}">
+                <button class="btn-detalhes" type="button">Ver Detalhes</button>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            {% if 'Preferências salvas com sucesso.' in message|stringformat:"s" %}
+                <div class="modal-overlay" id="modalSucesso">
+                    <div class="modal-box">
+                        <h3>Preferências salvas</h3>
+                        <p>Suas áreas de interesse foram atualizadas com sucesso.</p>
+
+                        <div class="modal-acoes">
+                            <button type="button" class="btn-modal-principal" onclick="fecharModalSucesso()">
+                                Continuar
+                            </button>
+
+                            <a href="{% url 'core:meu_perfil' %}">
+                                <button type="button" class="btn-modal-secundario">
+                                    Ir para meu perfil
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
+
+<script>
+    function fecharModalSucesso() {
+        const modal = document.getElementById('modalSucesso');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+</script>
+
+{% endblock %}
