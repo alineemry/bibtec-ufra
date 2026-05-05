@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 from dotenv import load_dotenv
+import dj_database_url
 import os
 
 # Carregar variáveis do arquivo .env (na raiz do projeto)
@@ -25,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ============================================
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-o!-=_&gcmdwu8wx-04@!x=$mc&1(i=+bly=iy22jye^hbh_h%j')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '.pythonanywhere.com', '.railway.app']
+ALLOWED_HOSTS = ['*', '.railway.app', 'localhost', '127.0.0.1']
 
 # ============================================
 # APPS
@@ -83,10 +84,10 @@ WSGI_APPLICATION = 'recomendacao_biblioteca.wsgi.application'
 # Banco de dados local (desenvolvimento)
 # Para produção, use DATABASE_URL via .env
 if os.getenv('DATABASE_URL'):
-    import dj_database_url
+    
     DATABASES = {
-        'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
-    }
+        'default': dj_database_url.config(default='postgresql://...')
+}
 else:
     DATABASES = {
         'default': {

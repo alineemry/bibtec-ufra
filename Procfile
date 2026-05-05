@@ -1,0 +1,1 @@
+web: gunicorn recomendacao_biblioteca.wsgi:application
