@@ -88,14 +88,20 @@ WSGI_APPLICATION = 'recomendacao_biblioteca.wsgi.application'
 # ============================================
 # DATABASE
 # ============================================
-# Banco de dados local (desenvolvimento)
-# Para produção, use DATABASE_URL via .env
-if os.getenv('DATABASE_URL'):
-    
+# Banco de dados - Railway (produção) ou local (desenvolvimento)
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+if DATABASE_URL:
+    # Configuração para Railway (PostgreSQL na nuvem)
     DATABASES = {
-        'default': dj_database_url.config(default='postgresql://...')
-}
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
 else:
+    # Configuração para desenvolvimento local (Docker PostgreSQL)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
