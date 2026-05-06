@@ -9,9 +9,7 @@ cmds = ["python manage.py collectstatic --noinput"]
 
 [phases.release]
 cmds = [
-    "python manage.py migrate --fake core zero",
-    "python manage.py migrate core",
-    "python manage.py migrate"
+    "python manage.py migrate --run-syncdb"
 ]
 
 [start]
