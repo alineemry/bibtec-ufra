@@ -8,7 +8,11 @@ cmds = ["pip install -r requirements.txt"]
 cmds = ["python manage.py collectstatic --noinput"]
 
 [phases.release]
-cmds = ["python manage.py migrate"]
+cmds = [
+    "python manage.py makemigrations",
+    "python manage.py migrate",
+    "python manage.py migrate --run-syncdb"
+]
 
 [start]
 cmd = "gunicorn recomendacao_biblioteca.wsgi:application"
