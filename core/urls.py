@@ -47,10 +47,14 @@ urlpatterns = [
     path('painel/palavras/excluir/<int:id>/', views.admin_palavra_excluir, name='admin_palavra_excluir'),
 
     # recuperação de senha
-    path('recuperar-senha/', views.RecuperarSenhaView.as_view(), name='recuperar_senha'),
-    path('recuperar-senha/enviado/', views.RecuperarSenhaEnviadoView.as_view(), name='recuperar_senha_enviado'),
-    path('redefinir-senha/<uidb64>/<token>/', views.RedefinirSenhaView.as_view(), name='redefinir_senha'),
-    path('redefinir-senha/concluido/', views.RedefinirSenhaConcluidoView.as_view(), name='redefinir_senha_concluido'),
+    path('recuperar-senha/', views.recuperar_senha_indisponivel, name='recuperar_senha'),
+    
+    
+    # path('recuperar-senha/', views.RecuperarSenhaView.as_view(), name='recuperar_senha'),
+    # path('recuperar-senha/enviado/', views.RecuperarSenhaEnviadoView.as_view(), name='recuperar_senha_enviado'),
+    # path('redefinir-senha/<uidb64>/<token>/', views.RedefinirSenhaView.as_view(), name='redefinir_senha'),
+    # path('redefinir-senha/concluido/', views.RedefinirSenhaConcluidoView.as_view(), name='redefinir_senha_concluido'),
+    
     
     # usuário convidado
     path('convidado/', views.pagina_inicial_convidado, name='pagina_inicial_convidado'),

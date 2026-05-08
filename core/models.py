@@ -105,6 +105,7 @@ class Livro(models.Model):
     titulo = models.CharField(max_length=255)
     autor = models.CharField(max_length=255, null=True, blank=True)
     isbn = models.CharField(max_length=20, null=True, blank=True)
+    localizacao_fisica = models.CharField(max_length=100, null=True, blank=True)
     editora = models.CharField(max_length=255, null=True, blank=True)
     sinopse = models.TextField(null=True, blank=True)
     capa_url = models.CharField(max_length=255, null=True, blank=True)
