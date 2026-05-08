@@ -24,3 +24,8 @@ __pycache__/
 
 # Logs
 *.log
+
+# Scripts de importação e enriquecimento (temporários)
+importar_livros.py
+enriquecer_livros.py
+*.csv
