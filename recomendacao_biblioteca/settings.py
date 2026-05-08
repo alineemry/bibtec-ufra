@@ -153,19 +153,17 @@ AUTHENTICATION_BACKENDS = [
     'core.backends.EmailOuUsernameBackend',
 ]
 
-# ============================================
-# E-MAIL
-# ============================================
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'bibtec.ufra@gmail.com')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = f'BIBTEC <{EMAIL_HOST_USER}>'
-
-# Para testes locais sem enviar e-mails reais, descomente a linha abaixo
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# Desabilitar e-mail completamente se a variável estiver presente
+if os.getenv('DISABLE_EMAIL', 'False') == 'True':
+    EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 587
+    EMAIL_USE_TLS = True
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'bibtec.ufra@gmail.com')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+    DEFAULT_FROM_EMAIL = f'BIBTEC <{EMAIL_HOST_USER}>'
 
 # ============================================
 # APIS EXTERNAS
