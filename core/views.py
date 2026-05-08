@@ -820,6 +820,11 @@ def admin_palavra_excluir(request, id):
     return redirect('core:admin_palavras_lista')
 
 # RECUPERAÇÃO DE SENHA
+
+def recuperar_senha_indisponivel(request):
+    return render(request, 'core/recuperar_senha_indisponivel.html')
+
+"""
 class RecuperarSenhaView(auth_views.PasswordResetView):
     template_name = 'core/recuperar_senha.html'
     email_template_name = 'core/emails/recuperar_senha_email.txt'
@@ -838,6 +843,7 @@ class RedefinirSenhaView(auth_views.PasswordResetConfirmView):
 
 class RedefinirSenhaConcluidoView(auth_views.PasswordResetCompleteView):
     template_name = 'core/redefinir_senha_concluido.html'
+"""
 
 # USUÁRIO CONVIDADO (PÚBLICO)  
 
