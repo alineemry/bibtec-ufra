@@ -4,13 +4,5 @@ nixPkgs = ["python311"]
 [phases.install]
 cmds = ["pip install -r requirements.txt"]
 
-[phases.build]
-cmds = ["python manage.py collectstatic --noinput"]
-
-[phases.release]
-cmds = [
-    "python manage.py migrate --run-syncdb"
-]
-
 [start]
 cmd = "gunicorn recomendacao_biblioteca.wsgi:application"
