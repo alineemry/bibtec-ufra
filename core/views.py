@@ -915,4 +915,7 @@ def detalhe_livro_publico(request, livro_id):
     })
 
 def recuperar_senha_indisponivel(request):
+    if request.method == 'POST':
+        # Se alguém tentar POST, mostra a mesma página
+        return render(request, 'core/recuperar_senha_indisponivel.html')
     return render(request, 'core/recuperar_senha_indisponivel.html')
