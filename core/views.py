@@ -820,10 +820,6 @@ def admin_palavra_excluir(request, id):
     return redirect('core:admin_palavras_lista')
 
 # RECUPERAÇÃO DE SENHA
-
-def recuperar_senha_indisponivel(request):
-    return render(request, 'core/recuperar_senha_indisponivel.html')
-
 """
 class RecuperarSenhaView(auth_views.PasswordResetView):
     template_name = 'core/recuperar_senha.html'
@@ -917,3 +913,6 @@ def detalhe_livro_publico(request, livro_id):
     return render(request, 'core/detalhe_livro_publico.html', {
         'livro': livro
     })
+
+def recuperar_senha_indisponivel(request):
+    return render(request, 'core/recuperar_senha_indisponivel.html')
