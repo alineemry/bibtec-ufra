@@ -154,16 +154,22 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Desabilitar e-mail completamente se a variável estiver presente
-if os.getenv('DISABLE_EMAIL', 'False') == 'True':
-    EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    EMAIL_HOST = 'smtp.gmail.com'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'bibtec.ufra@gmail.com')
-    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-    DEFAULT_FROM_EMAIL = f'BIBTEC <{EMAIL_HOST_USER}>'
+# ============================================
+# E-MAIL (COMPLETAMENTE DESABILITADO)
+# ============================================
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+
+
+#if os.getenv('DISABLE_EMAIL', 'False') == 'True':
+#    EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
+#else:
+#    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#    EMAIL_HOST = 'smtp.gmail.com'
+#    EMAIL_PORT = 587
+#    EMAIL_USE_TLS = True
+#    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'bibtec.ufra@gmail.com')
+#    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+#    DEFAULT_FROM_EMAIL = f'BIBTEC <{EMAIL_HOST_USER}>'
 
 # ============================================
 # APIS EXTERNAS
