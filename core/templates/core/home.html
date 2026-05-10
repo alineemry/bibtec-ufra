@@ -29,13 +29,26 @@
         font-family: Georgia, serif;
     }
 
-    .livros-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 20px;
+    .livros-wrapper {
+        overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
     }
 
+    .livros-grid {
+        display: flex;
+        gap: 20px;
+        width: max-content;
+        padding: 10px 5px;
+    }
+
+    /* O card mantém o tamanho original */
     .livro-card {
+        flex: 0 0 180px;  /* Largura fixa */
+        width: 180px;      /* Garantia extra */
+        min-width: 180px;  /* Evita encolher */
+        max-width: 180px;  /* Evita esticar */
         text-align: center;
     }
 
@@ -83,17 +96,11 @@
         font-size: 11px;
         color: #1f5a16;
         text-align: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .explicacao {
-        font-size: 12px;
-        color: #466848;
-        margin: 0 0 12px;
-        line-height: 1.4;
-        min-height: 34px;
+        white-space: normal;        
+        word-wrap: break-word;      
+        overflow-wrap: break-word;
+        max-width: 100%;            
+        display: block;
     }
 
     .btn-detalhes,
@@ -118,12 +125,18 @@
         white-space: nowrap;
     }
 
-    .explicacao {
-        font-size: 12px;
-        color: #2d4c2e;
-        margin: 6px 0 12px;
-        line-height: 1.4;
-        font-style: italic;
+    .livros-wrapper::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .livros-wrapper::-webkit-scrollbar-track {
+        background: #d4e8d4;
+        border-radius: 10px;
+    }
+
+    .livros-wrapper::-webkit-scrollbar-thumb {
+        background: #1f5a16;
+        border-radius: 10px;
     }
 
     .modal-overlay {
@@ -198,72 +211,76 @@
     }
 </style>
 
+<!-- Livros Disponíveis  -->
 <div class="secao-livros">
     <div class="secao-topo">
-        <h2>Livros Disponíveis na Biblioteca</h2>
+        <h2> Livros Disponíveis na Biblioteca</h2>
         <a href="{% url 'core:todos_livros' %}">
-            <button class="btn-mais" type="button">Mais →</button>
+            <button class="btn-mais" type="button">Ver todos →</button>
         </a>
     </div>
 
-    <div class="livros-grid">
-        {% for livro in livros_acervo %}
-            <div class="livro-card">
-                <a href="{% url 'core:detalhe_livro' livro.id %}">
-                    <div class="livro-capa">
-                        {% if livro.capa_url %}
-                            <img src="{{ livro.capa_url }}" alt="{{ livro.titulo }}">
-                        {% else %}
-                            <div>SEM<br>CAPA</div>
-                        {% endif %}
-                    </div>
-                </a>
-
-                <div class="livro-titulo">{{ livro.titulo|default:"Sem Nome" }}</div>
-                <div class="livro-autor">{{ livro.autor|default:"Autor não informado" }}</div>
-
-                <a href="{% url 'core:detalhe_livro' livro.id %}">
-                    <button class="btn-detalhes" type="button">Ver Detalhes</button>
-                </a>
-            </div>
-        {% endfor %}
+    <div class="livros-wrapper">
+        <div class="livros-grid">
+            {% for livro in livros_acervo %}
+                <div class="livro-card">
+                    <a href="{% url 'core:detalhe_livro' livro.id %}">
+                        <div class="livro-capa">
+                            {% if livro.capa_url %}
+                                <img src="{{ livro.capa_url }}" alt="{{ livro.titulo }}">
+                            {% else %}
+                                <div>SEM<br>CAPA</div>
+                            {% endif %}
+                        </div>
+                    </a>
+                    <div class="livro-titulo">{{ livro.titulo|default:"Sem Nome"|truncatechars:25 }}</div>
+                    <div class="livro-autor">{{ livro.autor|default:"Autor não informado"|truncatechars:20 }}</div>
+                    <a href="{% url 'core:detalhe_livro' livro.id %}">
+                        <button class="btn-detalhes" type="button">Ver Detalhes</button>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
+<!-- Recomendações -->
 <div class="secao-livros">
     <div class="secao-topo">
-        <h2>Livros Recomendados para Você</h2>
+        <h2> Recomendados para Você</h2>
         <a href="{% url 'core:todas_recomendacoes' %}">
-            <button class="btn-mais" type="button">Mais →</button>
+            <button class="btn-mais" type="button">Ver todas →</button>
         </a>
     </div>
 
-    <div class="livros-grid">
-        {% for livro in recomendacoes %}
-        <div class="livro-card">
-            <div class="livro-capa">
-                {% if livro.capa_url %}
-                    <img src="{{ livro.capa_url }}" alt="{{ livro.titulo }}">
-                {% else %}
-                    <div>SEM<br>CAPA</div>
-                {% endif %}
-            </div>
-
-            <div class="livro-titulo">{{ livro.titulo }}</div>
-            <div class="livro-autor">{{ livro.autor|default:"Autor não informado" }}</div>
-            
-            <!-- Explicação compacta -->
-            {% if livro.explicacao %}
-            <div class="recomendacao-motivo">
-                 {{ livro.explicacao|first }}
-            </div>
-            {% endif %}
-
-            <a href="{% url 'core:detalhe_livro' livro.id %}">
-                <button class="btn-detalhes" type="button">Ver Detalhes</button>
-            </a>
+    <div class="livros-wrapper">
+        <div class="livros-grid">
+            {% for livro in recomendacoes %}
+                <div class="livro-card">
+                    <a href="{% url 'core:detalhe_livro' livro.id %}">
+                        <div class="livro-capa">
+                            {% if livro.capa_url %}
+                                <img src="{{ livro.capa_url }}" alt="{{ livro.titulo }}">
+                            {% else %}
+                                <div>SEM<br>CAPA</div>
+                            {% endif %}
+                        </div>
+                    </a>
+                    <div class="livro-titulo">{{ livro.titulo|truncatechars:25 }}</div>
+                    <div class="livro-autor">{{ livro.autor|default:"Autor não informado"|truncatechars:20 }}</div>
+                    
+                    {% if livro.explicacao %}
+                    <div class="recomendacao-motivo">
+                         {{ livro.explicacao|first }}
+                    </div>
+                    {% endif %}
+                    
+                    <a href="{% url 'core:detalhe_livro' livro.id %}">
+                        <button class="btn-detalhes" type="button">Ver Detalhes</button>
+                    </a>
+                </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
 
     {% if messages %}
@@ -273,12 +290,10 @@
                     <div class="modal-box">
                         <h3>Preferências salvas</h3>
                         <p>Suas áreas de interesse foram atualizadas com sucesso.</p>
-
                         <div class="modal-acoes">
                             <button type="button" class="btn-modal-principal" onclick="fecharModalSucesso()">
                                 Continuar
                             </button>
-
                             <a href="{% url 'core:meu_perfil' %}">
                                 <button type="button" class="btn-modal-secundario">
                                     Ir para meu perfil
