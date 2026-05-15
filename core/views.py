@@ -51,7 +51,6 @@ def cadastro_usuario(request):
     if request.method == 'POST':
         form = CadastroUsuarioForm(request.POST)
         
-        # DEBUG: veja o que está chegando
         print("Dados recebidos:", request.POST)
         
         if form.is_valid():
@@ -75,10 +74,8 @@ def cadastro_usuario(request):
             login(request, user)
             return redirect('core:selecionar_areas_interesse')
         else:
-            # DEBUG: veja os erros
             print("Erros do formulário:", form.errors)
             
-            # Adicionar mensagem de erro para o usuário
             messages.error(request, 'Por favor, corrija os erros abaixo.')
     else:
         form = CadastroUsuarioForm()
@@ -128,7 +125,7 @@ def todos_livros(request):
     Lista completa de livros do acervo para usuários autenticados.
     """
     lista_livros = Livro.objects.all().order_by('titulo')
-    paginator = Paginator(lista_livros, 15)
+    paginator = Paginator(lista_livros, 20)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -143,7 +140,7 @@ def todas_recomendacoes(request):
     Lista completa de recomendações personalizadas do usuário.
     """
     lista_recomendacoes = get_recomendacoes_usuario(request.user.id)
-    paginator = Paginator(lista_recomendacoes, 15)
+    paginator = Paginator(lista_recomendacoes, 20)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -260,7 +257,7 @@ def selecionar_areas_interesse(request):
 
 @login_required
 def usuario_areas(request):
-    usuario = request.user.perfil  # <- AQUI está a correção
+    usuario = request.user.perfil  
 
     areas_iniciais = AreaConhecimento.objects.filter(
         usuarioareainteresse__usuario=usuario
@@ -477,7 +474,7 @@ def buscar_livros(request):
         livros = livros.filter(palavras_chave__id=palavra_id)
 
     # PAGINAÇÃO:
-    paginator = Paginator(livros, 10)
+    paginator = Paginator(livros, 20)
     page_obj = paginator.get_page(page_number)
 
     # Buscar livros já visualizados pelo usuário
@@ -519,7 +516,7 @@ def admin_livros_lista(request):
         )
 
     # Paginação: 
-    paginator = Paginator(livros, 10)
+    paginator = Paginator(livros, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -594,7 +591,7 @@ def admin_usuarios_lista(request):
         )
 
     # Paginação: 
-    paginator = Paginator(usuarios, 10)
+    paginator = Paginator(usuarios, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -672,7 +669,7 @@ def admin_areas_lista(request):
         areas = areas.filter(nome__icontains=termo)
 
     # Paginação: 
-    paginator = Paginator(areas, 10)
+    paginator = Paginator(areas, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -762,7 +759,7 @@ def admin_palavras_lista(request):
         palavras = palavras.filter(nome__icontains=termo)
 
     # Paginação: 10 palavras por página
-    paginator = Paginator(palavras, 10)
+    paginator = Paginator(palavras, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -848,7 +845,7 @@ def todos_livros_publico(request):
     Lista completa de livros do acervo para visitantes.
     """
     lista_livros = Livro.objects.all().order_by('titulo')
-    paginator = Paginator(lista_livros, 15)
+    paginator = Paginator(lista_livros, 20)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -864,7 +861,7 @@ def pagina_inicial_convidado(request):
     """
     
     lista_livros = Livro.objects.all().order_by('titulo')
-    paginator = Paginator(lista_livros, 15)
+    paginator = Paginator(lista_livros, 20)
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
